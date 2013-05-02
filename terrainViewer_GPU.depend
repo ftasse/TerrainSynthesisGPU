@@ -1,0 +1,2489 @@
+# depslib dependency file v1.0
+1298633968 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_main.cpp
+	"dtts_patchsynthesis.h"
+	<stdlib.h>
+
+1288359410 /home/flora/Dropbox/terrainViewer_GPU/dtts_patchsynthesis.h
+
+1306498462 source:/home/flora/Dropbox/terrainViewer_GPU/external/SpeedIT_Classic/si_classic_seq.cpp
+	<iostream>
+	<limits>
+	"si_classic.h"
+	<cmath>
+
+1293536476 /home/flora/Dropbox/terrainViewer_GPU/external/SpeedIT_Classic/si_classic.h
+
+1274705370 source:/home/flora/Dropbox/terrainViewer_GPU/external/maxflow/graph.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"graph.h"
+	"instances.inc"
+
+1288707913 /home/flora/Dropbox/terrainViewer_GPU/external/maxflow/graph.h
+	<string.h>
+	"block.h"
+	<assert.h>
+
+1288702364 /home/flora/Dropbox/terrainViewer_GPU/external/maxflow/block.h
+	"block.h"
+	<stdlib.h>
+
+1264435224 /home/flora/Dropbox/terrainViewer_GPU/external/maxflow/instances.inc
+	"graph.h"
+
+1289668518 source:/home/flora/Dropbox/terrainViewer_GPU/external/maxflow/maxflow.cpp
+	<stdio.h>
+	"graph.h"
+	"instances.inc"
+
+1306498666 source:/home/flora/Dropbox/terrainViewer_GPU/external/noise/noise.cpp
+	"noise.h"
+	<iostream>
+	<sstream>
+	<fstream>
+	<math.h>
+
+1306498696 /home/flora/Dropbox/terrainViewer_GPU/external/noise/noise.h
+	<cstdlib>
+	<cmath>
+
+1297781023 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_2dmorph.cu
+	"dtts_2dmorph.h"
+
+1302803449 /home/flora/Dropbox/terrainViewer_GPU/dtts_2dmorph.h
+	"external/ludecomposition.h"
+	<vector>
+	<utility>
+	<cassert>
+	<cmath>
+
+1282565545 /home/flora/Dropbox/terrainViewer_GPU/external/ludecomposition.h
+	<boost/numeric/ublas/matrix.hpp>
+	<boost/numeric/ublas/matrix_proxy.hpp>
+
+1306961247 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_image.cu
+	"dtts_image.h"
+	<stdio.h>
+	<math.h>
+	<algorithm>
+
+1306961259 /home/flora/Dropbox/terrainViewer_GPU/dtts_image.h
+	"headers.h"
+
+1306961167 /home/flora/Dropbox/terrainViewer_GPU/headers.h
+	<cmath>
+	<cstdlib>
+	<ctime>
+	<cfloat>
+	<iostream>
+	<map>
+	<list>
+	<vector>
+	<queue>
+	<algorithm>
+	<utility>
+	<fstream>
+	<sys/stat.h>
+
+1307040510 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_match.cu
+	"dtts_match.h"
+	<thrust/sort.h>
+	<thrust/device_ptr.h>
+	<thrust/device_malloc.h>
+	<thrust/device_free.h>
+	<thrust/device_vector.h>
+	<thrust/system_error.h>
+	<thrust/count.h>
+	"cutil_math_bugfixes.h"
+
+1306962853 /home/flora/Dropbox/terrainViewer_GPU/dtts_match.h
+	"dtts_image.h"
+	"dtts_ppa.h"
+	"dtts_wavelet.h"
+	"dtts_2dmorph.h"
+	"dtts_merging.h"
+	"external/noise/noise.h"
+
+1306961304 /home/flora/Dropbox/terrainViewer_GPU/dtts_ppa.h
+	"dtts_image.h"
+
+1306496971 /home/flora/Dropbox/terrainViewer_GPU/dtts_wavelet.h
+	"dtts_image.h"
+
+1306961293 /home/flora/Dropbox/terrainViewer_GPU/dtts_merging.h
+	"external/maxflow/graph.h"
+	"dtts_image.h"
+
+1275815168 /home/flora/Dropbox/terrainViewer_GPU/external/linear_solver/ArrayVector.h
+	"init.h"
+	"ArrayVector.cpp"
+
+1275815148 /home/flora/Dropbox/terrainViewer_GPU/external/linear_solver/init.h
+	<iostream>
+	<cstdlib>
+	<math.h>
+
+1275813740 /home/flora/Dropbox/terrainViewer_GPU/external/linear_solver/ArrayVector.cpp
+	"ArrayVector.h"
+
+1288349662 /home/flora/Dropbox/terrainViewer_GPU/external/linear_solver/SparseMatrix.h
+	"init.h"
+	"ArrayVector.h"
+
+1275815180 /home/flora/Dropbox/terrainViewer_GPU/external/linear_solver/LinearSolver.h
+	"init.h"
+	"ArrayVector.h"
+	"SparseMatrix.h"
+
+1306961283 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_merging.cu
+	"dtts_merging.h"
+	"external/SpeedIT_Classic/si_classic.h"
+	"cublas.h"
+	<cusparse.h>
+	<cublas.h>
+	<sys/time.h>
+
+1306961241 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_patchsynthesis.cu
+	"dtts_patchsynthesis.h"
+	"dtts_match.h"
+
+1288351322 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_wavelet.cu
+	"dtts_wavelet.h"
+
+1307057166 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_ppa.cpp
+	"dtts_ppa.h"
+	"dtts_mst.h"
+
+1306497926 source:/home/flora/Dropbox/terrainViewer_GPU/external/SpeedIT_Classic/si_classic.cu
+	"cuda.h"
+	"cublas.h"
+	<iostream>
+	<limits>
+	"si_classic.h"
+
+1306498752 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_2dmorph.cpp
+	"dtts_2dmorph.h"
+
+1306496937 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_wavelet.cpp
+	"dtts_wavelet.h"
+
+1306961200 source:/home/flora/Dropbox/terrainViewer_GPU/dtts_main .cpp
+	"dtts_patchsynthesis.h"
+	<stdlib.h>
+	<iostream>
+	<ctime>
+	<iomanip>
+	"dtts_match.h"
+
+1299968462 /home/flora/Dropbox/terrainViewer_GPU/dtts_mst.h
+	<iostream>
+	<string.h>
+	<stdlib.h>
+
+1290176671 /usr/include/qt4/QtCore/QVariant
+	"qvariant.h"
+
+1298376239 /usr/include/qt4/QtCore/qvariant.h
+	<QtCore/qatomic.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qlist.h>
+	<QtCore/qmetatype.h>
+	<QtCore/qmap.h>
+	<QtCore/qhash.h>
+	<QtCore/qstring.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic.h
+	<QtCore/qglobal.h>
+	<QtCore/qbasicatomic.h>
+
+1301079654 /usr/include/qt4/QtCore/qglobal.h
+	<stddef.h>
+	<QtCore/qconfig.h>
+	<AvailabilityMacros.h>
+	<e32def.h>
+	<QtCore/qfeatures.h>
+
+1301079911 /usr/include/qt4/QtCore/qconfig.h
+
+1298376240 /usr/include/qt4/QtCore/qfeatures.h
+
+1298376240 /usr/include/qt4/QtCore/qbasicatomic.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic_bootstrap.h>
+	<QtCore/qatomic_arch.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_bootstrap.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_arch.h
+	"QtCore/qglobal.h"
+	"QtCore/qatomic_vxworks.h"
+	"QtCore/qatomic_alpha.h"
+	"QtCore/qatomic_arm.h"
+	"QtCore/qatomic_armv6.h"
+	"QtCore/qatomic_avr32.h"
+	"QtCore/qatomic_bfin.h"
+	"QtCore/qatomic_generic.h"
+	"QtCore/qatomic_i386.h"
+	"QtCore/qatomic_ia64.h"
+	"QtCore/qatomic_macosx.h"
+	"QtCore/qatomic_mips.h"
+	"QtCore/qatomic_parisc.h"
+	"QtCore/qatomic_powerpc.h"
+	"QtCore/qatomic_s390.h"
+	"QtCore/qatomic_sparc.h"
+	"QtCore/qatomic_windows.h"
+	"QtCore/qatomic_windowsce.h"
+	"QtCore/qatomic_x86_64.h"
+	"QtCore/qatomic_symbian.h"
+	"QtCore/qatomic_sh.h"
+	"QtCore/qatomic_sh4a.h"
+
+1298376240 /usr/include/qt4/QtCore/qatomic_vxworks.h
+	<QtCore/qatomic_powerpc.h>
+	<vxWorksCommon.h>
+	<taskLib.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_powerpc.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_alpha.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_arm.h
+
+1301079654 /usr/include/qt4/QtCore/qatomic_armv6.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_avr32.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_bfin.h
+	<asm/fixed_code.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_generic.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_i386.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_ia64.h
+	<ia64intrin.h>
+	<ia64/sys/inline.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_macosx.h
+	<QtCore/qatomic_x86_64.h>
+	<QtCore/qatomic_i386.h>
+	<QtCore/qatomic_powerpc.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_x86_64.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_mips.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_parisc.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_s390.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_sparc.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_windows.h
+	"QtCore/qatomic_i386.h"
+	"QtCore/qatomic_x86_64.h"
+	<winbase.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_windowsce.h
+	<QtCore/qglobal.h>
+	"QtCore/qatomic_windows.h"
+
+1298376240 /usr/include/qt4/QtCore/qatomic_symbian.h
+	<QtCore/qglobal.h>
+	<e32std.h>
+
+1298376240 /usr/include/qt4/QtCore/qatomic_sh.h
+
+1298376240 /usr/include/qt4/QtCore/qatomic_sh4a.h
+
+1298376240 /usr/include/qt4/QtCore/qbytearray.h
+	<QtCore/qatomic.h>
+	<QtCore/qnamespace.h>
+	<string.h>
+	<stdarg.h>
+
+1298376240 /usr/include/qt4/QtCore/qnamespace.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qlist.h
+	<QtCore/qiterator.h>
+	<QtCore/qatomic.h>
+	<QtCore/qalgorithms.h>
+	<iterator>
+	<list>
+	<new>
+	<limits.h>
+	<string.h>
+
+1298376240 /usr/include/qt4/QtCore/qiterator.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qalgorithms.h
+	<QtCore/qglobal.h>
+
+1298376239 /usr/include/qt4/QtCore/qmetatype.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic.h>
+	<QtCore/qdatastream.h>
+
+1298376240 /usr/include/qt4/QtCore/qdatastream.h
+	<QtCore/qscopedpointer.h>
+	<QtCore/qiodevice.h>
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qscopedpointer.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qiodevice.h
+	<QtCore/qobject.h>
+	<QtCore/qobjectdefs.h>
+	<QtCore/qscopedpointer.h>
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtCore/qobject.h
+	<QtCore/qobjectdefs.h>
+	<QtCore/qstring.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qlist.h>
+	<QtCore/qcoreevent.h>
+	<QtCore/qscopedpointer.h>
+
+1298376239 /usr/include/qt4/QtCore/qobjectdefs.h
+	<QtCore/qnamespace.h>
+
+1298376240 /usr/include/qt4/QtCore/qstring.h
+	<QtCore/qchar.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qatomic.h>
+	<QtCore/qnamespace.h>
+	<Qt3Support/q3cstring.h>
+	<string>
+	<string>
+	<stdarg.h>
+	<QtCore/qstringbuilder.h>
+
+1298376240 /usr/include/qt4/QtCore/qchar.h
+	<QtCore/qglobal.h>
+
+1298376239 /usr/include/qt4/Qt3Support/q3cstring.h
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qstringbuilder.h
+	<QtCore/qstring.h>
+	<QtCore/qmap.h>
+	<string.h>
+
+1298376240 /usr/include/qt4/QtCore/qmap.h
+	<QtCore/qatomic.h>
+	<QtCore/qiterator.h>
+	<QtCore/qlist.h>
+	<map>
+	<new>
+
+1298376240 /usr/include/qt4/QtCore/qcoreevent.h
+	<QtCore/qnamespace.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qobjectdefs.h>
+
+1301079654 /usr/include/qt4/QtCore/qhash.h
+	<QtCore/qatomic.h>
+	<QtCore/qchar.h>
+	<QtCore/qiterator.h>
+	<QtCore/qlist.h>
+	<QtCore/qpair.h>
+
+1298376240 /usr/include/qt4/QtCore/qpair.h
+	<QtCore/qdatastream.h>
+
+1290176673 /usr/include/qt4/QtGui/QAction
+	"qaction.h"
+
+1298376238 /usr/include/qt4/QtGui/qaction.h
+	<QtGui/qkeysequence.h>
+	<QtCore/qstring.h>
+	<QtGui/qwidget.h>
+	<QtCore/qvariant.h>
+	<QtGui/qicon.h>
+	<QtGui/qactiongroup.h>
+
+1298376238 /usr/include/qt4/QtGui/qkeysequence.h
+	<QtCore/qnamespace.h>
+	<QtCore/qstring.h>
+
+1298376238 /usr/include/qt4/QtGui/qwidget.h
+	<QtGui/qwindowdefs.h>
+	<QtCore/qobject.h>
+	<QtCore/qmargins.h>
+	<QtGui/qpaintdevice.h>
+	<QtGui/qpalette.h>
+	<QtGui/qfont.h>
+	<QtGui/qfontmetrics.h>
+	<QtGui/qfontinfo.h>
+	<QtGui/qsizepolicy.h>
+	<QtGui/qregion.h>
+	<QtGui/qbrush.h>
+	<QtGui/qcursor.h>
+	<QtGui/qkeysequence.h>
+	<QtGui/qevent.h>
+
+1298376238 /usr/include/qt4/QtGui/qwindowdefs.h
+	<QtCore/qobjectdefs.h>
+	<QtCore/qnamespace.h>
+	<QtGui/qmacdefines_mac.h>
+	<QtGui/qwindowdefs_win.h>
+
+1298376238 /usr/include/qt4/QtGui/qmacdefines_mac.h
+	<QtCore/qglobal.h>
+	<Cocoa/Cocoa.h>
+
+1298376238 /usr/include/qt4/QtGui/qwindowdefs_win.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qmargins.h
+	<QtCore/qnamespace.h>
+
+1298376239 /usr/include/qt4/QtGui/qpaintdevice.h
+	<QtGui/qwindowdefs.h>
+	<QtCore/qrect.h>
+
+1298376240 /usr/include/qt4/QtCore/qrect.h
+	<QtCore/qsize.h>
+	<QtCore/qpoint.h>
+
+1298376240 /usr/include/qt4/QtCore/qsize.h
+	<QtCore/qnamespace.h>
+
+1298376240 /usr/include/qt4/QtCore/qpoint.h
+	<QtCore/qnamespace.h>
+
+1298376238 /usr/include/qt4/QtGui/qpalette.h
+	<QtGui/qwindowdefs.h>
+	<QtGui/qcolor.h>
+	<QtGui/qbrush.h>
+
+1298376239 /usr/include/qt4/QtGui/qcolor.h
+	<QtGui/qrgb.h>
+	<QtCore/qnamespace.h>
+	<QtCore/qstringlist.h>
+
+1298376239 /usr/include/qt4/QtGui/qrgb.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qstringlist.h
+	<QtCore/qalgorithms.h>
+	<QtCore/qdatastream.h>
+	<QtCore/qlist.h>
+	<QtCore/qregexp.h>
+	<QtCore/qstring.h>
+	<QtCore/qstringmatcher.h>
+	<Qt3Support/q3valuelist.h>
+
+1298376240 /usr/include/qt4/QtCore/qregexp.h
+	<QtCore/qstring.h>
+	<new>
+
+1298376240 /usr/include/qt4/QtCore/qstringmatcher.h
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/Qt3Support/q3valuelist.h
+	<QtCore/qalgorithms.h>
+	<QtCore/qdatastream.h>
+	<QtCore/qlinkedlist.h>
+	<QtCore/qlist.h>
+	<iterator>
+	<list>
+
+1298376240 /usr/include/qt4/QtCore/qlinkedlist.h
+	<QtCore/qiterator.h>
+	<QtCore/qatomic.h>
+	<iterator>
+	<list>
+
+1298376239 /usr/include/qt4/QtGui/qbrush.h
+	<QtCore/qpair.h>
+	<QtCore/qpoint.h>
+	<QtCore/qvector.h>
+	<QtCore/qscopedpointer.h>
+	<QtGui/qcolor.h>
+	<QtGui/qmatrix.h>
+	<QtGui/qtransform.h>
+	<QtGui/qimage.h>
+	<QtGui/qpixmap.h>
+
+1298376240 /usr/include/qt4/QtCore/qvector.h
+	<QtCore/qiterator.h>
+	<QtCore/qatomic.h>
+	<QtCore/qalgorithms.h>
+	<QtCore/qlist.h>
+	<iterator>
+	<vector>
+	<stdlib.h>
+	<string.h>
+	<QtCore/QPointF>
+	<QtCore/QPoint>
+
+1301079668 /usr/include/qt4/QtCore/QPointF
+	"qpoint.h"
+
+1301079668 /usr/include/qt4/QtCore/QPoint
+	"qpoint.h"
+
+1298376239 /usr/include/qt4/QtGui/qmatrix.h
+	<QtGui/qpolygon.h>
+	<QtGui/qregion.h>
+	<QtGui/qwindowdefs.h>
+	<QtCore/qline.h>
+	<QtCore/qpoint.h>
+	<QtCore/qrect.h>
+	<QtGui/qwmatrix.h>
+
+1298376239 /usr/include/qt4/QtGui/qpolygon.h
+	<QtCore/qvector.h>
+	<QtCore/qpoint.h>
+	<QtCore/qrect.h>
+
+1298376239 /usr/include/qt4/QtGui/qregion.h
+	<QtCore/qatomic.h>
+	<QtCore/qrect.h>
+	<QtGui/qwindowdefs.h>
+	<QtCore/qdatastream.h>
+
+1298376240 /usr/include/qt4/QtCore/qline.h
+	<QtCore/qpoint.h>
+
+1298376239 /usr/include/qt4/QtGui/qwmatrix.h
+	<QtGui/qmatrix.h>
+
+1298376239 /usr/include/qt4/QtGui/qtransform.h
+	<QtGui/qmatrix.h>
+	<QtGui/qpainterpath.h>
+	<QtGui/qpolygon.h>
+	<QtGui/qregion.h>
+	<QtGui/qwindowdefs.h>
+	<QtCore/qline.h>
+	<QtCore/qpoint.h>
+	<QtCore/qrect.h>
+
+1298376239 /usr/include/qt4/QtGui/qpainterpath.h
+	<QtGui/qmatrix.h>
+	<QtCore/qglobal.h>
+	<QtCore/qrect.h>
+	<QtCore/qline.h>
+	<QtCore/qvector.h>
+	<QtCore/qscopedpointer.h>
+
+1298376239 /usr/include/qt4/QtGui/qimage.h
+	<QtGui/qtransform.h>
+	<QtGui/qpaintdevice.h>
+	<QtGui/qrgb.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qrect.h>
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qpixmap.h
+	<QtGui/qpaintdevice.h>
+	<QtGui/qcolor.h>
+	<QtCore/qnamespace.h>
+	<QtCore/qstring.h>
+	<QtCore/qsharedpointer.h>
+	<QtGui/qimage.h>
+	<QtGui/qtransform.h>
+
+1298376240 /usr/include/qt4/QtCore/qsharedpointer.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic.h>
+	<QtCore/qshareddata.h>
+	<QtCore/qsharedpointer_impl.h>
+
+1298376240 /usr/include/qt4/QtCore/qshareddata.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic.h>
+
+1298376240 /usr/include/qt4/QtCore/qsharedpointer_impl.h
+	<new>
+	<QtCore/qatomic.h>
+	<QtCore/qobject.h>
+
+1298376239 /usr/include/qt4/QtGui/qfont.h
+	<QtGui/qwindowdefs.h>
+	<QtCore/qstring.h>
+	<QtCore/qsharedpointer.h>
+
+1298376239 /usr/include/qt4/QtGui/qfontmetrics.h
+	<QtGui/qfont.h>
+	<QtCore/qsharedpointer.h>
+	<QtCore/qrect.h>
+
+1298376239 /usr/include/qt4/QtGui/qfontinfo.h
+	<QtGui/qfont.h>
+	<QtCore/qsharedpointer.h>
+
+1298376238 /usr/include/qt4/QtGui/qsizepolicy.h
+	<QtCore/qobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qcursor.h
+	<QtCore/qpoint.h>
+	<QtGui/qwindowdefs.h>
+
+1301079654 /usr/include/qt4/QtGui/qevent.h
+	<QtGui/qwindowdefs.h>
+	<QtCore/qobject.h>
+	<QtGui/qregion.h>
+	<QtCore/qnamespace.h>
+	<QtCore/qstring.h>
+	<QtGui/qkeysequence.h>
+	<QtCore/qcoreevent.h>
+	<QtGui/qmime.h>
+	<QtGui/qdrag.h>
+	<QtCore/qvariant.h>
+	<QtCore/qmap.h>
+	<QtCore/qset.h>
+
+1298376238 /usr/include/qt4/QtGui/qmime.h
+	<QtCore/qmimedata.h>
+	<QtCore/qvariant.h>
+
+1298376239 /usr/include/qt4/QtCore/qmimedata.h
+	<QtCore/qvariant.h>
+	<QtCore/qobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qdrag.h
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qset.h
+	<QtCore/qhash.h>
+
+1298376239 /usr/include/qt4/QtGui/qicon.h
+	<QtCore/qglobal.h>
+	<QtCore/qsize.h>
+	<QtCore/qlist.h>
+	<QtGui/qpixmap.h>
+
+1298376238 /usr/include/qt4/QtGui/qactiongroup.h
+	<QtGui/qaction.h>
+
+1290176673 /usr/include/qt4/QtGui/QApplication
+	"qapplication.h"
+
+1298376238 /usr/include/qt4/QtGui/qapplication.h
+	<QtCore/qcoreapplication.h>
+	<QtGui/qwindowdefs.h>
+	<QtCore/qpoint.h>
+	<QtCore/qsize.h>
+	<QtGui/qcursor.h>
+	<QtGui/qdesktopwidget.h>
+	<QtGui/qwidget.h>
+	<QtGui/qpalette.h>
+	<QtGui/qrgb.h>
+	<QtGui/qtransportauth_qws.h>
+
+1298376239 /usr/include/qt4/QtCore/qcoreapplication.h
+	<QtCore/qobject.h>
+	<QtCore/qcoreevent.h>
+	<QtCore/qeventloop.h>
+	<QtCore/qstringlist.h>
+
+1298376239 /usr/include/qt4/QtCore/qeventloop.h
+	<QtCore/qobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qdesktopwidget.h
+	<QtGui/qwidget.h>
+
+1298376238 /usr/include/qt4/QtGui/qtransportauth_qws.h
+	<QtCore/qglobal.h>
+	<QtCore/qobject.h>
+	<QtCore/qhash.h>
+	<QtCore/qstring.h>
+	<QtCore/qbuffer.h>
+	<QtCore/qpointer.h>
+	<sys/types.h>
+
+1298376240 /usr/include/qt4/QtCore/qbuffer.h
+	<QtCore/qiodevice.h>
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qpointer.h
+	<QtCore/qobject.h>
+
+1290176673 /usr/include/qt4/QtGui/QButtonGroup
+	"qbuttongroup.h"
+
+1298376239 /usr/include/qt4/QtGui/qbuttongroup.h
+	<QtCore/qobject.h>
+
+1290176673 /usr/include/qt4/QtGui/QCheckBox
+	"qcheckbox.h"
+
+1298376239 /usr/include/qt4/QtGui/qcheckbox.h
+	<QtGui/qabstractbutton.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractbutton.h
+	<QtGui/qicon.h>
+	<QtGui/qkeysequence.h>
+	<QtGui/qwidget.h>
+
+1290176673 /usr/include/qt4/QtGui/QDialog
+	"qdialog.h"
+
+1298376238 /usr/include/qt4/QtGui/qdialog.h
+	<QtGui/qwidget.h>
+
+1290176673 /usr/include/qt4/QtGui/QHeaderView
+	"qheaderview.h"
+
+1298376239 /usr/include/qt4/QtGui/qheaderview.h
+	<QtGui/qabstractitemview.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractitemview.h
+	<QtGui/qabstractscrollarea.h>
+	<QtCore/qabstractitemmodel.h>
+	<QtGui/qitemselectionmodel.h>
+	<QtGui/qabstractitemdelegate.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractscrollarea.h
+	<QtGui/qframe.h>
+
+1298376239 /usr/include/qt4/QtGui/qframe.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtCore/qabstractitemmodel.h
+	<QtCore/qvariant.h>
+	<QtCore/qobject.h>
+	<QtCore/qhash.h>
+
+1298376239 /usr/include/qt4/QtGui/qitemselectionmodel.h
+	<QtCore/qset.h>
+	<QtCore/qvector.h>
+	<QtCore/qlist.h>
+	<QtCore/qabstractitemmodel.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractitemdelegate.h
+	<QtCore/qobject.h>
+	<QtGui/qstyleoption.h>
+
+1298376239 /usr/include/qt4/QtGui/qstyleoption.h
+	<QtCore/qvariant.h>
+	<QtGui/qabstractspinbox.h>
+	<QtGui/qicon.h>
+	<QtGui/qmatrix.h>
+	<QtGui/qslider.h>
+	<QtGui/qstyle.h>
+	<QtGui/qtabbar.h>
+	<QtGui/qtabwidget.h>
+	<QtGui/qrubberband.h>
+	<QtGui/qframe.h>
+	<QtCore/qabstractitemmodel.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractspinbox.h
+	<QtGui/qwidget.h>
+	<QtGui/qvalidator.h>
+
+1298376239 /usr/include/qt4/QtGui/qvalidator.h
+	<QtCore/qobject.h>
+	<QtCore/qstring.h>
+	<QtCore/qregexp.h>
+	<QtCore/qlocale.h>
+
+1298376240 /usr/include/qt4/QtCore/qlocale.h
+	<QtCore/qstring.h>
+	<QtCore/qobjectdefs.h>
+
+1298376239 /usr/include/qt4/QtGui/qslider.h
+	<QtGui/qabstractslider.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractslider.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qstyle.h
+	<QtCore/qobject.h>
+	<QtCore/qrect.h>
+	<QtCore/qsize.h>
+	<QtGui/qicon.h>
+	<QtGui/qpixmap.h>
+	<QtGui/qpalette.h>
+	<QtGui/qsizepolicy.h>
+
+1298376239 /usr/include/qt4/QtGui/qtabbar.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qtabwidget.h
+	<QtGui/qwidget.h>
+	<QtGui/qicon.h>
+
+1298376239 /usr/include/qt4/QtGui/qrubberband.h
+	<QtGui/qwidget.h>
+
+1290176673 /usr/include/qt4/QtGui/QLabel
+	"qlabel.h"
+
+1298376239 /usr/include/qt4/QtGui/qlabel.h
+	<QtGui/qframe.h>
+
+1290176673 /usr/include/qt4/QtGui/QLineEdit
+	"qlineedit.h"
+
+1298376239 /usr/include/qt4/QtGui/qlineedit.h
+	<QtGui/qframe.h>
+	<QtCore/qstring.h>
+	<QtCore/qmargins.h>
+
+1290176673 /usr/include/qt4/QtGui/QPushButton
+	"qpushbutton.h"
+
+1298376239 /usr/include/qt4/QtGui/qpushbutton.h
+	<QtGui/qabstractbutton.h>
+
+1290176673 /usr/include/qt4/QtGui/QSpinBox
+	"qspinbox.h"
+
+1298376239 /usr/include/qt4/QtGui/qspinbox.h
+	<QtGui/qabstractspinbox.h>
+
+1301079673 /usr/include/qt4/QtGui/QtGui
+	<QtCore/QtCore>
+	"qabstractpagesetupdialog.h"
+	"qabstractprintdialog.h"
+	"qcolordialog.h"
+	"qdialog.h"
+	"qerrormessage.h"
+	"qfiledialog.h"
+	"qfilesystemmodel.h"
+	"qfontdialog.h"
+	"qinputdialog.h"
+	"qmessagebox.h"
+	"qpagesetupdialog.h"
+	"qprintdialog.h"
+	"qprintpreviewdialog.h"
+	"qprogressdialog.h"
+	"qwizard.h"
+	"qvfbhdr.h"
+	"qwsembedwidget.h"
+	"qgraphicsanchorlayout.h"
+	"qgraphicsgridlayout.h"
+	"qgraphicsitem.h"
+	"qgraphicsitemanimation.h"
+	"qgraphicslayout.h"
+	"qgraphicslayoutitem.h"
+	"qgraphicslinearlayout.h"
+	"qgraphicsproxywidget.h"
+	"qgraphicsscene.h"
+	"qgraphicssceneevent.h"
+	"qgraphicstransform.h"
+	"qgraphicsview.h"
+	"qgraphicswidget.h"
+	"qaction.h"
+	"qactiongroup.h"
+	"qapplication.h"
+	"qboxlayout.h"
+	"qclipboard.h"
+	"qcursor.h"
+	"qdesktopwidget.h"
+	"qdrag.h"
+	"qevent.h"
+	"qformlayout.h"
+	"qgesture.h"
+	"qgesturerecognizer.h"
+	"qgridlayout.h"
+	"qkeysequence.h"
+	"qlayout.h"
+	"qlayoutitem.h"
+	"qmime.h"
+	"qpalette.h"
+	"qsessionmanager.h"
+	"qshortcut.h"
+	"qsizepolicy.h"
+	"qsound.h"
+	"qstackedlayout.h"
+	"qtooltip.h"
+	"qwhatsthis.h"
+	"qwidget.h"
+	"qwidgetaction.h"
+	"qwindowdefs.h"
+	"qgraphicseffect.h"
+	"qs60mainapplication.h"
+	"qs60mainappui.h"
+	"qs60maindocument.h"
+	"qgenericmatrix.h"
+	"qmatrix4x4.h"
+	"qquaternion.h"
+	"qvector2d.h"
+	"qvector3d.h"
+	"qvector4d.h"
+	"qbitmap.h"
+	"qicon.h"
+	"qiconengine.h"
+	"qiconengineplugin.h"
+	"qimage.h"
+	"qimageiohandler.h"
+	"qimagereader.h"
+	"qimagewriter.h"
+	"qmovie.h"
+	"qpicture.h"
+	"qpictureformatplugin.h"
+	"qpixmap.h"
+	"qpixmapcache.h"
+	"qsymbianevent.h"
+	"qabstracttextdocumentlayout.h"
+	"qfont.h"
+	"qfontdatabase.h"
+	"qfontinfo.h"
+	"qfontmetrics.h"
+	"qstatictext.h"
+	"qsyntaxhighlighter.h"
+	"qtextcursor.h"
+	"qtextdocument.h"
+	"qtextdocumentfragment.h"
+	"qtextdocumentwriter.h"
+	"qtextformat.h"
+	"qtextlayout.h"
+	"qtextlist.h"
+	"qtextobject.h"
+	"qtextoption.h"
+	"qtexttable.h"
+	"qabstractitemdelegate.h"
+	"qabstractitemview.h"
+	"qabstractproxymodel.h"
+	"qcolumnview.h"
+	"qdatawidgetmapper.h"
+	"qdirmodel.h"
+	"qfileiconprovider.h"
+	"qheaderview.h"
+	"qitemdelegate.h"
+	"qitemeditorfactory.h"
+	"qitemselectionmodel.h"
+	"qlistview.h"
+	"qlistwidget.h"
+	"qproxymodel.h"
+	"qsortfilterproxymodel.h"
+	"qstandarditemmodel.h"
+	"qstringlistmodel.h"
+	"qstyleditemdelegate.h"
+	"qtableview.h"
+	"qtablewidget.h"
+	"qtreeview.h"
+	"qtreewidget.h"
+	"qtreewidgetitemiterator.h"
+	"qabstractbutton.h"
+	"qabstractscrollarea.h"
+	"qabstractslider.h"
+	"qabstractspinbox.h"
+	"qbuttongroup.h"
+	"qcalendarwidget.h"
+	"qcheckbox.h"
+	"qcombobox.h"
+	"qcommandlinkbutton.h"
+	"qdatetimeedit.h"
+	"qdial.h"
+	"qdialogbuttonbox.h"
+	"qdockwidget.h"
+	"qfocusframe.h"
+	"qfontcombobox.h"
+	"qframe.h"
+	"qgroupbox.h"
+	"qlabel.h"
+	"qlcdnumber.h"
+	"qlineedit.h"
+	"qmainwindow.h"
+	"qmdiarea.h"
+	"qmdisubwindow.h"
+	"qmenu.h"
+	"qmenubar.h"
+	"qmenudata.h"
+	"qplaintextedit.h"
+	"qprintpreviewwidget.h"
+	"qprogressbar.h"
+	"qpushbutton.h"
+	"qradiobutton.h"
+	"qrubberband.h"
+	"qscrollarea.h"
+	"qscrollbar.h"
+	"qsizegrip.h"
+	"qslider.h"
+	"qspinbox.h"
+	"qsplashscreen.h"
+	"qsplitter.h"
+	"qstackedwidget.h"
+	"qstatusbar.h"
+	"qtabbar.h"
+	"qtabwidget.h"
+	"qtextbrowser.h"
+	"qtextedit.h"
+	"qtoolbar.h"
+	"qtoolbox.h"
+	"qtoolbutton.h"
+	"qvalidator.h"
+	"qworkspace.h"
+	"qkeyeventtransition.h"
+	"qmouseeventtransition.h"
+	"qcompleter.h"
+	"qdesktopservices.h"
+	"qsystemtrayicon.h"
+	"qundogroup.h"
+	"qundostack.h"
+	"qundoview.h"
+	"qaccessible.h"
+	"qaccessible2.h"
+	"qaccessiblebridge.h"
+	"qaccessibleobject.h"
+	"qaccessibleplugin.h"
+	"qaccessiblewidget.h"
+	"qcdestyle.h"
+	"qcleanlooksstyle.h"
+	"qcommonstyle.h"
+	"qgtkstyle.h"
+	"qmotifstyle.h"
+	"qplastiquestyle.h"
+	"qproxystyle.h"
+	"qs60style.h"
+	"qstyle.h"
+	"qstylefactory.h"
+	"qstyleoption.h"
+	"qstyleplugin.h"
+	"qwindowscestyle.h"
+	"qwindowsmobilestyle.h"
+	"qwindowsstyle.h"
+	"qwindowsvistastyle.h"
+	"qwindowsxpstyle.h"
+	"qinputcontext.h"
+	"qinputcontextfactory.h"
+	"qinputcontextplugin.h"
+	"qbrush.h"
+	"qcolor.h"
+	"qcolormap.h"
+	"qdrawutil.h"
+	"qmatrix.h"
+	"qpaintdevice.h"
+	"qpaintengine.h"
+	"qpainter.h"
+	"qpainterpath.h"
+	"qpen.h"
+	"qpolygon.h"
+	"qprintengine.h"
+	"qprinter.h"
+	"qprinterinfo.h"
+	"qregion.h"
+	"qrgb.h"
+	"qstylepainter.h"
+	"qtransform.h"
+	"qwmatrix.h"
+
+1301079670 /usr/include/qt4/QtCore/QtCore
+	"qabstractanimation.h"
+	"qanimationgroup.h"
+	"qparallelanimationgroup.h"
+	"qpauseanimation.h"
+	"qpropertyanimation.h"
+	"qsequentialanimationgroup.h"
+	"qvariantanimation.h"
+	"qabstracteventdispatcher.h"
+	"qabstractitemmodel.h"
+	"qbasictimer.h"
+	"qcoreapplication.h"
+	"qcoreevent.h"
+	"qeventloop.h"
+	"qmath.h"
+	"qmetaobject.h"
+	"qmetatype.h"
+	"qmimedata.h"
+	"qobject.h"
+	"qobjectcleanuphandler.h"
+	"qobjectdefs.h"
+	"qpointer.h"
+	"qsharedmemory.h"
+	"qsignalmapper.h"
+	"qsocketnotifier.h"
+	"qsystemsemaphore.h"
+	"qtimer.h"
+	"qtranslator.h"
+	"qvariant.h"
+	"qendian.h"
+	"qfeatures.h"
+	"qglobal.h"
+	"qlibraryinfo.h"
+	"qnamespace.h"
+	"qnumeric.h"
+	"qatomic.h"
+	"qbasicatomic.h"
+	"qmutex.h"
+	"qreadwritelock.h"
+	"qsemaphore.h"
+	"qthread.h"
+	"qthreadstorage.h"
+	"qwaitcondition.h"
+	"qfactoryinterface.h"
+	"qlibrary.h"
+	"qplugin.h"
+	"qpluginloader.h"
+	"quuid.h"
+	"qalgorithms.h"
+	"qbitarray.h"
+	"qbytearray.h"
+	"qbytearraymatcher.h"
+	"qcache.h"
+	"qchar.h"
+	"qcontainerfwd.h"
+	"qcontiguouscache.h"
+	"qcryptographichash.h"
+	"qdatetime.h"
+	"qeasingcurve.h"
+	"qelapsedtimer.h"
+	"qhash.h"
+	"qiterator.h"
+	"qline.h"
+	"qlinkedlist.h"
+	"qlist.h"
+	"qlocale.h"
+	"qmap.h"
+	"qmargins.h"
+	"qpair.h"
+	"qpoint.h"
+	"qqueue.h"
+	"qrect.h"
+	"qregexp.h"
+	"qscopedpointer.h"
+	"qset.h"
+	"qshareddata.h"
+	"qsharedpointer.h"
+	"qsize.h"
+	"qstack.h"
+	"qstring.h"
+	"qstringbuilder.h"
+	"qstringlist.h"
+	"qstringmatcher.h"
+	"qtextboundaryfinder.h"
+	"qtimeline.h"
+	"qvarlengtharray.h"
+	"qvector.h"
+	"qxmlstream.h"
+	"qabstractstate.h"
+	"qabstracttransition.h"
+	"qeventtransition.h"
+	"qfinalstate.h"
+	"qhistorystate.h"
+	"qsignaltransition.h"
+	"qstate.h"
+	"qstatemachine.h"
+	"qtextcodec.h"
+	"qtextcodecplugin.h"
+	"qabstractfileengine.h"
+	"qbuffer.h"
+	"qdatastream.h"
+	"qdebug.h"
+	"qdir.h"
+	"qdiriterator.h"
+	"qfile.h"
+	"qfileinfo.h"
+	"qfilesystemwatcher.h"
+	"qfsfileengine.h"
+	"qiodevice.h"
+	"qprocess.h"
+	"qresource.h"
+	"qsettings.h"
+	"qtemporaryfile.h"
+	"qtextstream.h"
+	"qurl.h"
+	"qfuture.h"
+	"qfutureinterface.h"
+	"qfuturesynchronizer.h"
+	"qfuturewatcher.h"
+	"qrunnable.h"
+	"qtconcurrentcompilertest.h"
+	"qtconcurrentexception.h"
+	"qtconcurrentfilter.h"
+	"qtconcurrentfilterkernel.h"
+	"qtconcurrentfunctionwrappers.h"
+	"qtconcurrentiteratekernel.h"
+	"qtconcurrentmap.h"
+	"qtconcurrentmapkernel.h"
+	"qtconcurrentmedian.h"
+	"qtconcurrentreducekernel.h"
+	"qtconcurrentresultstore.h"
+	"qtconcurrentrun.h"
+	"qtconcurrentrunbase.h"
+	"qtconcurrentstoredfunctioncall.h"
+	"qtconcurrentthreadengine.h"
+	"qthreadpool.h"
+
+1298376240 /usr/include/qt4/QtCore/qxmlstream.h
+	<QtCore/qiodevice.h>
+	<QtCore/qstring.h>
+	<QtCore/qvector.h>
+	<QtCore/qscopedpointer.h>
+
+1298376240 /usr/include/qt4/QtCore/qendian.h
+	<QtCore/qglobal.h>
+	<stdlib.h>
+	<byteswap.h>
+
+1298376240 /usr/include/qt4/QtCore/qlibraryinfo.h
+	<QtCore/qstring.h>
+	<QtCore/QDate>
+
+1301079668 /usr/include/qt4/QtCore/QDate
+	"qdatetime.h"
+
+1298376240 /usr/include/qt4/QtCore/qdatetime.h
+	<QtCore/qstring.h>
+	<QtCore/qnamespace.h>
+	<QtCore/qsharedpointer.h>
+
+1298376240 /usr/include/qt4/QtCore/qnumeric.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qfuture.h
+	<QtCore/qglobal.h>
+	<QtCore/qfutureinterface.h>
+	<QtCore/qstring.h>
+	<QtCore/qtconcurrentcompilertest.h>
+
+1298376240 /usr/include/qt4/QtCore/qfutureinterface.h
+	<QtCore/qglobal.h>
+	<QtCore/qrunnable.h>
+	<QtCore/qmutex.h>
+	<QtCore/qtconcurrentexception.h>
+	<QtCore/qtconcurrentresultstore.h>
+
+1298376240 /usr/include/qt4/QtCore/qrunnable.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qmutex.h
+	<QtCore/qglobal.h>
+	<new>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentexception.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic.h>
+	<exception>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentresultstore.h
+	<QtCore/qglobal.h>
+	<QtCore/qmap.h>
+	<QtCore/qdebug.h>
+
+1298376240 /usr/include/qt4/QtCore/qdebug.h
+	<QtCore/qalgorithms.h>
+	<QtCore/qhash.h>
+	<QtCore/qlist.h>
+	<QtCore/qmap.h>
+	<QtCore/qpair.h>
+	<QtCore/qtextstream.h>
+	<QtCore/qstring.h>
+	<QtCore/qvector.h>
+	<QtCore/qset.h>
+	<QtCore/qcontiguouscache.h>
+
+1298376240 /usr/include/qt4/QtCore/qtextstream.h
+	<QtCore/qiodevice.h>
+	<QtCore/qstring.h>
+	<QtCore/qchar.h>
+	<QtCore/qlocale.h>
+	<QtCore/qscopedpointer.h>
+	<QtCore/qtextcodec.h>
+	<stdio.h>
+
+1298376240 /usr/include/qt4/QtCore/qtextcodec.h
+	<QtCore/qstring.h>
+	<QtCore/qlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qcontiguouscache.h
+	<QtCore/qatomic.h>
+	<limits.h>
+	<new>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentcompilertest.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qfuturesynchronizer.h
+	<QtCore/qfuture.h>
+
+1298376240 /usr/include/qt4/QtCore/qfuturewatcher.h
+	<QtCore/qfuture.h>
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentfilter.h
+	<QtCore/qglobal.h>
+	<QtCore/qtconcurrentfilterkernel.h>
+	<QtCore/qtconcurrentfunctionwrappers.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentfilterkernel.h
+	<QtCore/qglobal.h>
+	<QtCore/qtconcurrentiteratekernel.h>
+	<QtCore/qtconcurrentmapkernel.h>
+	<QtCore/qtconcurrentreducekernel.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentiteratekernel.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic.h>
+	<QtCore/qtconcurrentmedian.h>
+	<QtCore/qtconcurrentthreadengine.h>
+	<iterator>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentmedian.h
+	<QtCore/qglobal.h>
+	<QtCore/qvector.h>
+	<QtCore/qalgorithms.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentthreadengine.h
+	<QtCore/qglobal.h>
+	<QtCore/qthreadpool.h>
+	<QtCore/qfuture.h>
+	<QtCore/qdebug.h>
+	<QtCore/qtconcurrentexception.h>
+	<QtCore/qwaitcondition.h>
+	<QtCore/qatomic.h>
+	<QtCore/qsemaphore.h>
+
+1298376240 /usr/include/qt4/QtCore/qthreadpool.h
+	<QtCore/qglobal.h>
+	<QtCore/qthread.h>
+	<QtCore/qrunnable.h>
+
+1298376240 /usr/include/qt4/QtCore/qthread.h
+	<QtCore/qobject.h>
+	<limits.h>
+
+1298376240 /usr/include/qt4/QtCore/qwaitcondition.h
+	<QtCore/qglobal.h>
+	<limits.h>
+
+1298376240 /usr/include/qt4/QtCore/qsemaphore.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentmapkernel.h
+	<QtCore/qglobal.h>
+	<QtCore/qtconcurrentiteratekernel.h>
+	<QtCore/qtconcurrentreducekernel.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentreducekernel.h
+	<QtCore/qglobal.h>
+	<QtCore/qatomic.h>
+	<QtCore/qlist.h>
+	<QtCore/qmap.h>
+	<QtCore/qmutex.h>
+	<QtCore/qthread.h>
+	<QtCore/qthreadpool.h>
+	<QtCore/qvector.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentfunctionwrappers.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentmap.h
+	<QtCore/qglobal.h>
+	<QtCore/qtconcurrentmapkernel.h>
+	<QtCore/qtconcurrentreducekernel.h>
+	<QtCore/qtconcurrentfunctionwrappers.h>
+	<QtCore/qstringlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentrun.h
+	<QtCore/qglobal.h>
+	<QtCore/qtconcurrentrunbase.h>
+	<QtCore/qtconcurrentstoredfunctioncall.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentrunbase.h
+	<QtCore/qglobal.h>
+	<QtCore/qfuture.h>
+	<QtCore/qrunnable.h>
+	<QtCore/qthreadpool.h>
+
+1298376240 /usr/include/qt4/QtCore/qtconcurrentstoredfunctioncall.h
+	<QtCore/qglobal.h>
+	<QtCore/qtconcurrentrunbase.h>
+
+1298376240 /usr/include/qt4/QtCore/qtextcodecplugin.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+	<QtCore/qlist.h>
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qplugin.h
+	<QtCore/qobject.h>
+	<QtCore/qpointer.h>
+
+1298376240 /usr/include/qt4/QtCore/qfactoryinterface.h
+	<QtCore/qobject.h>
+	<QtCore/qstringlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qabstractfileengine.h
+	<QtCore/qdir.h>
+
+1298376240 /usr/include/qt4/QtCore/qdir.h
+	<QtCore/qstring.h>
+	<QtCore/qfileinfo.h>
+	<QtCore/qstringlist.h>
+	<QtCore/qshareddata.h>
+
+1298376240 /usr/include/qt4/QtCore/qfileinfo.h
+	<QtCore/qfile.h>
+	<QtCore/qlist.h>
+	<QtCore/qshareddata.h>
+
+1298376240 /usr/include/qt4/QtCore/qfile.h
+	<QtCore/qiodevice.h>
+	<QtCore/qstring.h>
+	<stdio.h>
+
+1298376240 /usr/include/qt4/QtCore/qdiriterator.h
+	<QtCore/qdir.h>
+
+1298376240 /usr/include/qt4/QtCore/qfilesystemwatcher.h
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qfsfileengine.h
+	<QtCore/qabstractfileengine.h>
+
+1298376240 /usr/include/qt4/QtCore/qprocess.h
+	<QtCore/qiodevice.h>
+	<QtCore/qstringlist.h>
+	<QtCore/qshareddata.h>
+
+1298376240 /usr/include/qt4/QtCore/qresource.h
+	<QtCore/qstring.h>
+	<QtCore/qlocale.h>
+	<QtCore/qstringlist.h>
+	<QtCore/qlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qsettings.h
+	<QtCore/qobject.h>
+	<QtCore/qvariant.h>
+	<QtCore/qstring.h>
+	<QtCore/qstringlist.h>
+	<ctype.h>
+
+1298376240 /usr/include/qt4/QtCore/qtemporaryfile.h
+	<QtCore/qiodevice.h>
+	<QtCore/qfile.h>
+
+1298376240 /usr/include/qt4/QtCore/qurl.h
+	<QtCore/qbytearray.h>
+	<QtCore/qobjectdefs.h>
+	<QtCore/qpair.h>
+	<QtCore/qstring.h>
+	<QtCore/qhash.h>
+
+1298376240 /usr/include/qt4/QtCore/qbitarray.h
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qbytearraymatcher.h
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qcache.h
+	<QtCore/qhash.h>
+
+1298376240 /usr/include/qt4/QtCore/qcontainerfwd.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qcryptographichash.h
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qeasingcurve.h
+	<QtCore/qglobal.h>
+	<QtCore/qobjectdefs.h>
+
+1298376240 /usr/include/qt4/QtCore/qelapsedtimer.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qqueue.h
+	<QtCore/qlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qstack.h
+	<QtCore/qvector.h>
+
+1298376240 /usr/include/qt4/QtCore/qtextboundaryfinder.h
+	<QtCore/qchar.h>
+	<QtCore/qstring.h>
+
+1298376240 /usr/include/qt4/QtCore/qtimeline.h
+	<QtCore/qeasingcurve.h>
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qvarlengtharray.h
+	<QtCore/qcontainerfwd.h>
+	<QtCore/qglobal.h>
+	<new>
+
+1298376239 /usr/include/qt4/QtCore/qabstractanimation.h
+	<QtCore/qobject.h>
+
+1298376239 /usr/include/qt4/QtCore/qanimationgroup.h
+	<QtCore/qabstractanimation.h>
+
+1298376239 /usr/include/qt4/QtCore/qparallelanimationgroup.h
+	<QtCore/qanimationgroup.h>
+
+1298376239 /usr/include/qt4/QtCore/qpauseanimation.h
+	<QtCore/qanimationgroup.h>
+
+1298376239 /usr/include/qt4/QtCore/qpropertyanimation.h
+	<QtCore/qvariantanimation.h>
+
+1298376239 /usr/include/qt4/QtCore/qvariantanimation.h
+	<QtCore/qeasingcurve.h>
+	<QtCore/qabstractanimation.h>
+	<QtCore/qvector.h>
+	<QtCore/qvariant.h>
+	<QtCore/qpair.h>
+
+1298376239 /usr/include/qt4/QtCore/qsequentialanimationgroup.h
+	<QtCore/qanimationgroup.h>
+
+1298376239 /usr/include/qt4/QtCore/qabstracteventdispatcher.h
+	<QtCore/qobject.h>
+	<QtCore/qeventloop.h>
+
+1298376239 /usr/include/qt4/QtCore/qbasictimer.h
+	<QtCore/qglobal.h>
+
+1298376239 /usr/include/qt4/QtCore/qmath.h
+	<math.h>
+	<QtCore/qglobal.h>
+	<e32math.h>
+
+1298376240 /usr/include/qt4/QtCore/qmetaobject.h
+	<QtCore/qobjectdefs.h>
+	<QtCore/qvariant.h>
+
+1298376240 /usr/include/qt4/QtCore/qobjectcleanuphandler.h
+	<QtCore/qobject.h>
+
+1298376239 /usr/include/qt4/QtCore/qsharedmemory.h
+	<QtCore/qobject.h>
+
+1298376239 /usr/include/qt4/QtCore/qsignalmapper.h
+	<QtCore/qobject.h>
+
+1298376239 /usr/include/qt4/QtCore/qsocketnotifier.h
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qsystemsemaphore.h
+	<QtCore/qstring.h>
+	<QtCore/qscopedpointer.h>
+
+1298376239 /usr/include/qt4/QtCore/qtimer.h
+	<QtCore/qbasictimer.h>
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qtranslator.h
+	<QtCore/qobject.h>
+	<QtCore/qbytearray.h>
+
+1298376240 /usr/include/qt4/QtCore/qreadwritelock.h
+	<QtCore/qglobal.h>
+	<limits.h>
+
+1298376240 /usr/include/qt4/QtCore/qthreadstorage.h
+	<QtCore/qglobal.h>
+
+1298376240 /usr/include/qt4/QtCore/qabstractstate.h
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qabstracttransition.h
+	<QtCore/qobject.h>
+	<QtCore/qlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qeventtransition.h
+	<QtCore/qabstracttransition.h>
+	<QtCore/qcoreevent.h>
+
+1298376240 /usr/include/qt4/QtCore/qfinalstate.h
+	<QtCore/qabstractstate.h>
+
+1298376240 /usr/include/qt4/QtCore/qhistorystate.h
+	<QtCore/qabstractstate.h>
+
+1298376240 /usr/include/qt4/QtCore/qsignaltransition.h
+	<QtCore/qabstracttransition.h>
+
+1298376240 /usr/include/qt4/QtCore/qstate.h
+	<QtCore/qabstractstate.h>
+	<QtCore/qlist.h>
+
+1298376240 /usr/include/qt4/QtCore/qstatemachine.h
+	<QtCore/qstate.h>
+	<QtCore/qcoreevent.h>
+	<QtCore/qlist.h>
+	<QtCore/qobject.h>
+	<QtCore/qset.h>
+	<QtCore/qvariant.h>
+
+1298376240 /usr/include/qt4/QtCore/qlibrary.h
+	<QtCore/qobject.h>
+
+1298376240 /usr/include/qt4/QtCore/qpluginloader.h
+	<QtCore/qlibrary.h>
+
+1298376240 /usr/include/qt4/QtCore/quuid.h
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qcdestyle.h
+	<QtGui/qmotifstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qmotifstyle.h
+	<QtGui/qcommonstyle.h>
+	<QtCore/qpointer.h>
+
+1298376239 /usr/include/qt4/QtGui/qcommonstyle.h
+	<QtGui/qstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qcleanlooksstyle.h
+	<QtGui/qwindowsstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qwindowsstyle.h
+	<QtGui/qcommonstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qgtkstyle.h
+	<QtGui/QCleanlooksStyle>
+	<QtGui/QPalette>
+	<QtGui/QFont>
+	<QtGui/QFileDialog>
+
+1301079673 /usr/include/qt4/QtGui/QCleanlooksStyle
+	"qcleanlooksstyle.h"
+
+1301079672 /usr/include/qt4/QtGui/QPalette
+	"qpalette.h"
+
+1301079672 /usr/include/qt4/QtGui/QFont
+	"qfont.h"
+
+1301079671 /usr/include/qt4/QtGui/QFileDialog
+	"qfiledialog.h"
+
+1298376238 /usr/include/qt4/QtGui/qfiledialog.h
+	<QtCore/qdir.h>
+	<QtCore/qstring.h>
+	<QtGui/qdialog.h>
+
+1298376239 /usr/include/qt4/QtGui/qplastiquestyle.h
+	<QtGui/qwindowsstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qproxystyle.h
+	<QtGui/QCommonStyle>
+
+1301079673 /usr/include/qt4/QtGui/QCommonStyle
+	"qcommonstyle.h"
+
+1298376239 /usr/include/qt4/QtGui/qs60style.h
+	<QtGui/qcommonstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qstylefactory.h
+	<QtCore/qstringlist.h>
+
+1298376239 /usr/include/qt4/QtGui/qstyleplugin.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+
+1298376239 /usr/include/qt4/QtGui/qwindowscestyle.h
+	<QtGui/qwindowsstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qwindowsmobilestyle.h
+	<QtGui/qwindowsstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qwindowsvistastyle.h
+	<QtGui/qwindowsxpstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qwindowsxpstyle.h
+	<QtGui/qwindowsstyle.h>
+
+1298376239 /usr/include/qt4/QtGui/qsymbianevent.h
+	<QtCore/qglobal.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstracttextdocumentlayout.h
+	<QtCore/qobject.h>
+	<QtGui/qtextlayout.h>
+	<QtGui/qtextdocument.h>
+	<QtGui/qtextcursor.h>
+	<QtGui/qpalette.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextlayout.h
+	<QtCore/qstring.h>
+	<QtCore/qnamespace.h>
+	<QtCore/qrect.h>
+	<QtCore/qvector.h>
+	<QtGui/qcolor.h>
+	<QtCore/qobject.h>
+	<QtGui/qevent.h>
+	<QtGui/qtextformat.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextformat.h
+	<QtGui/qcolor.h>
+	<QtGui/qfont.h>
+	<QtCore/qshareddata.h>
+	<QtCore/qvector.h>
+	<QtCore/qvariant.h>
+	<QtGui/qpen.h>
+	<QtGui/qbrush.h>
+	<QtGui/qtextoption.h>
+
+1298376239 /usr/include/qt4/QtGui/qpen.h
+	<QtGui/qcolor.h>
+	<QtGui/qbrush.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextoption.h
+	<QtCore/qnamespace.h>
+	<QtCore/qchar.h>
+	<QtCore/qmetatype.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextdocument.h
+	<QtCore/qobject.h>
+	<QtCore/qsize.h>
+	<QtCore/qrect.h>
+	<QtGui/qfont.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextcursor.h
+	<QtCore/qstring.h>
+	<QtCore/qshareddata.h>
+	<QtGui/qtextformat.h>
+
+1298376239 /usr/include/qt4/QtGui/qfontdatabase.h
+	<QtGui/qwindowdefs.h>
+	<QtCore/qstring.h>
+	<QtGui/qfont.h>
+	<QtCore/qstringlist.h>
+	<QtCore/qlist.h>
+
+1298376239 /usr/include/qt4/QtGui/qstatictext.h
+	<QtCore/qsize.h>
+	<QtCore/qstring.h>
+	<QtCore/qmetatype.h>
+	<QtGui/qtransform.h>
+	<QtGui/qfont.h>
+	<QtGui/qtextoption.h>
+
+1298376239 /usr/include/qt4/QtGui/qsyntaxhighlighter.h
+	<QtCore/qglobal.h>
+	<QtCore/qobject.h>
+	<QtGui/qtextobject.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextobject.h
+	<QtCore/qobject.h>
+	<QtGui/qtextformat.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextdocumentfragment.h
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextdocumentwriter.h
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextlist.h
+	<QtGui/qtextobject.h>
+	<QtCore/qobject.h>
+
+1298376239 /usr/include/qt4/QtGui/qtexttable.h
+	<QtCore/qglobal.h>
+	<QtCore/qobject.h>
+	<QtGui/qtextobject.h>
+
+1298376239 /usr/include/qt4/QtGui/qaccessible.h
+	<QtCore/qglobal.h>
+	<QtCore/qobject.h>
+	<QtCore/qrect.h>
+	<QtCore/qset.h>
+	<QtCore/qvector.h>
+	<QtCore/qvariant.h>
+	<QtGui/qcolor.h>
+	<QtGui/qevent.h>
+
+1298376239 /usr/include/qt4/QtGui/qaccessible2.h
+	<QtGui/qaccessible.h>
+
+1298376239 /usr/include/qt4/QtGui/qaccessiblebridge.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+
+1298376239 /usr/include/qt4/QtGui/qaccessibleobject.h
+	<QtGui/qaccessible.h>
+
+1298376239 /usr/include/qt4/QtGui/qaccessibleplugin.h
+	<QtGui/qaccessible.h>
+	<QtCore/qfactoryinterface.h>
+
+1298376239 /usr/include/qt4/QtGui/qaccessiblewidget.h
+	<QtGui/qaccessibleobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qgenericmatrix.h
+	<QtCore/qmetatype.h>
+	<QtCore/qdebug.h>
+	<QtCore/qdatastream.h>
+
+1298376238 /usr/include/qt4/QtGui/qmatrix4x4.h
+	<QtGui/qvector3d.h>
+	<QtGui/qvector4d.h>
+	<QtGui/qquaternion.h>
+	<QtGui/qgenericmatrix.h>
+	<QtCore/qrect.h>
+
+1298376238 /usr/include/qt4/QtGui/qvector3d.h
+	<QtCore/qpoint.h>
+	<QtCore/qmetatype.h>
+
+1298376238 /usr/include/qt4/QtGui/qvector4d.h
+	<QtCore/qpoint.h>
+	<QtCore/qmetatype.h>
+
+1298376238 /usr/include/qt4/QtGui/qquaternion.h
+	<QtGui/qvector3d.h>
+	<QtGui/qvector4d.h>
+
+1298376238 /usr/include/qt4/QtGui/qvector2d.h
+	<QtCore/qpoint.h>
+	<QtCore/qmetatype.h>
+
+1298376239 /usr/include/qt4/QtGui/qcolormap.h
+	<QtCore/qatomic.h>
+	<QtGui/qrgb.h>
+	<QtCore/qvector.h>
+	<QtGui/qwindowdefs.h>
+
+1298376239 /usr/include/qt4/QtGui/qdrawutil.h
+	<QtCore/qnamespace.h>
+	<QtCore/qstring.h>
+	<QtCore/qmargins.h>
+	<QtGui/qpixmap.h>
+
+1298376239 /usr/include/qt4/QtGui/qpaintengine.h
+	<QtCore/qnamespace.h>
+	<QtCore/qobjectdefs.h>
+	<QtCore/qscopedpointer.h>
+	<QtGui/qpainter.h>
+
+1298376239 /usr/include/qt4/QtGui/qpainter.h
+	<QtCore/qnamespace.h>
+	<QtCore/qrect.h>
+	<QtCore/qpoint.h>
+	<QtCore/qscopedpointer.h>
+	<QtGui/qpixmap.h>
+	<QtGui/qimage.h>
+	<QtGui/qtextoption.h>
+	<QtGui/qdrawutil.h>
+	<QtGui/qpolygon.h>
+	<QtGui/qpen.h>
+	<QtGui/qbrush.h>
+	<QtGui/qmatrix.h>
+	<QtGui/qtransform.h>
+	<QtGui/qfontinfo.h>
+	<QtGui/qfontmetrics.h>
+
+1298376239 /usr/include/qt4/QtGui/qprintengine.h
+	<QtCore/qvariant.h>
+	<QtGui/qprinter.h>
+
+1298376239 /usr/include/qt4/QtGui/qprinter.h
+	<QtCore/qstring.h>
+	<QtCore/qscopedpointer.h>
+	<QtGui/qpaintdevice.h>
+
+1298376239 /usr/include/qt4/QtGui/qprinterinfo.h
+	<QtGui/QPrinter>
+	<QtCore/QList>
+
+1301079673 /usr/include/qt4/QtGui/QPrinter
+	"qprinter.h"
+
+1301079668 /usr/include/qt4/QtCore/QList
+	"qlist.h"
+
+1298376239 /usr/include/qt4/QtGui/qstylepainter.h
+	<QtGui/qpainter.h>
+	<QtGui/qstyle.h>
+	<QtGui/qwidget.h>
+
+1298376238 /usr/include/qt4/QtGui/qs60mainapplication.h
+	<QtCore/qglobal.h>
+	<aknapp.h>
+	<eikapp.h>
+
+1298376238 /usr/include/qt4/QtGui/qs60mainappui.h
+	<QtCore/qglobal.h>
+	<aknappui.h>
+	<eikappui.h>
+
+1298376238 /usr/include/qt4/QtGui/qs60maindocument.h
+	<QtCore/qglobal.h>
+	<AknDoc.h>
+	<eikdoc.h>
+
+1298376239 /usr/include/qt4/QtGui/qbitmap.h
+	<QtGui/qpixmap.h>
+
+1298376239 /usr/include/qt4/QtGui/qiconengine.h
+	<QtCore/qglobal.h>
+	<QtCore/qlist.h>
+	<QtGui/qicon.h>
+
+1298376239 /usr/include/qt4/QtGui/qiconengineplugin.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+
+1298376239 /usr/include/qt4/QtGui/qimageiohandler.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+	<QtCore/qscopedpointer.h>
+
+1298376238 /usr/include/qt4/QtGui/qimagereader.h
+	<QtCore/qbytearray.h>
+	<QtGui/qimage.h>
+	<QtGui/qimageiohandler.h>
+
+1298376239 /usr/include/qt4/QtGui/qimagewriter.h
+	<QtCore/qbytearray.h>
+	<QtCore/qlist.h>
+	<QtGui/qimageiohandler.h>
+
+1298376239 /usr/include/qt4/QtGui/qmovie.h
+	<QtCore/qobject.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qlist.h>
+	<QtCore/qobject.h>
+	<QtGui/qimagereader.h>
+	<QtGui/qimage.h>
+	<QtGui/qpixmap.h>
+
+1298376239 /usr/include/qt4/QtGui/qpicture.h
+	<QtCore/qstringlist.h>
+	<QtCore/qsharedpointer.h>
+	<QtGui/qpaintdevice.h>
+
+1298376239 /usr/include/qt4/QtGui/qpictureformatplugin.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+
+1298376239 /usr/include/qt4/QtGui/qpixmapcache.h
+	<QtGui/qpixmap.h>
+	<QtCore/qpair.h>
+
+1298376239 /usr/include/qt4/QtGui/qcalendarwidget.h
+	<QtGui/qwidget.h>
+	<QtCore/qdatetime.h>
+
+1298376239 /usr/include/qt4/QtGui/qcombobox.h
+	<QtGui/qwidget.h>
+	<QtGui/qabstractitemdelegate.h>
+	<QtCore/qabstractitemmodel.h>
+	<QtCore/qvariant.h>
+
+1298376239 /usr/include/qt4/QtGui/qcommandlinkbutton.h
+	<QtGui/qpushbutton.h>
+
+1298376239 /usr/include/qt4/QtGui/qdatetimeedit.h
+	<QtCore/qdatetime.h>
+	<QtCore/qvariant.h>
+	<QtGui/qabstractspinbox.h>
+
+1298376239 /usr/include/qt4/QtGui/qdial.h
+	<QtGui/qabstractslider.h>
+
+1298376239 /usr/include/qt4/QtGui/qdialogbuttonbox.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qdockwidget.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qfocusframe.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qfontcombobox.h
+	<QtGui/qcombobox.h>
+	<QtGui/qfontdatabase.h>
+
+1298376239 /usr/include/qt4/QtGui/qgroupbox.h
+	<QtGui/qframe.h>
+
+1298376239 /usr/include/qt4/QtGui/qlcdnumber.h
+	<QtGui/qframe.h>
+	<QtCore/qbitarray.h>
+
+1298376239 /usr/include/qt4/QtGui/qmainwindow.h
+	<QtGui/qwidget.h>
+	<QtGui/qtabwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qmdiarea.h
+	<QtGui/qabstractscrollarea.h>
+	<QtGui/qtabwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qmdisubwindow.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qmenu.h
+	<QtGui/qwidget.h>
+	<QtCore/qstring.h>
+	<QtGui/qicon.h>
+	<QtGui/qaction.h>
+	<QtGui/qpixmap.h>
+
+1298376239 /usr/include/qt4/QtGui/qmenubar.h
+	<QtGui/qmenu.h>
+
+1298376239 /usr/include/qt4/QtGui/qmenudata.h
+	<QtCore/qglobal.h>
+	<QtGui/qaction.h>
+
+1298376239 /usr/include/qt4/QtGui/qplaintextedit.h
+	<QtGui/qtextedit.h>
+	<QtGui/qabstractscrollarea.h>
+	<QtGui/qtextdocument.h>
+	<QtGui/qtextoption.h>
+	<QtGui/qtextcursor.h>
+	<QtGui/qtextformat.h>
+	<QtGui/qabstracttextdocumentlayout.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextedit.h
+	<QtGui/qabstractscrollarea.h>
+	<QtGui/qtextdocument.h>
+	<QtGui/qtextoption.h>
+	<QtGui/qtextcursor.h>
+	<QtGui/qtextformat.h>
+	<QtGui/qtextobject.h>
+	<QtGui/qtextlayout.h>
+
+1298376239 /usr/include/qt4/QtGui/qprintpreviewwidget.h
+	<QtGui/qwidget.h>
+	<QtGui/qprinter.h>
+
+1298376239 /usr/include/qt4/QtGui/qprogressbar.h
+	<QtGui/qframe.h>
+
+1298376239 /usr/include/qt4/QtGui/qradiobutton.h
+	<QtGui/qabstractbutton.h>
+
+1298376239 /usr/include/qt4/QtGui/qscrollarea.h
+	<QtGui/qabstractscrollarea.h>
+
+1298376239 /usr/include/qt4/QtGui/qscrollbar.h
+	<QtGui/qwidget.h>
+	<QtGui/qabstractslider.h>
+
+1298376239 /usr/include/qt4/QtGui/qsizegrip.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qsplashscreen.h
+	<QtGui/qpixmap.h>
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qsplitter.h
+	<QtGui/qframe.h>
+	<QtGui/qsizepolicy.h>
+
+1298376239 /usr/include/qt4/QtGui/qstackedwidget.h
+	<QtGui/qframe.h>
+
+1298376239 /usr/include/qt4/QtGui/qstatusbar.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qtextbrowser.h
+	<QtGui/qtextedit.h>
+	<QtCore/qurl.h>
+
+1298376239 /usr/include/qt4/QtGui/qtoolbar.h
+	<QtGui/qwidget.h>
+
+1298376239 /usr/include/qt4/QtGui/qtoolbox.h
+	<QtGui/qframe.h>
+	<QtGui/qicon.h>
+
+1298376239 /usr/include/qt4/QtGui/qtoolbutton.h
+	<QtGui/qabstractbutton.h>
+
+1298376239 /usr/include/qt4/QtGui/qworkspace.h
+	<QtGui/qwidget.h>
+
+1298376238 /usr/include/qt4/QtGui/qabstractpagesetupdialog.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qabstractprintdialog.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qcolordialog.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qerrormessage.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qfilesystemmodel.h
+	<QtCore/qabstractitemmodel.h>
+	<QtCore/qpair.h>
+	<QtCore/qdir.h>
+	<QtGui/qicon.h>
+	<QtCore/qdiriterator.h>
+
+1298376238 /usr/include/qt4/QtGui/qfontdialog.h
+	<QtGui/qwindowdefs.h>
+	<QtGui/qdialog.h>
+	<QtGui/qfont.h>
+
+1298376238 /usr/include/qt4/QtGui/qinputdialog.h
+	<QtGui/qdialog.h>
+	<QtCore/qstring.h>
+	<QtGui/qlineedit.h>
+
+1298376238 /usr/include/qt4/QtGui/qmessagebox.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qpagesetupdialog.h
+	<QtGui/qabstractpagesetupdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qprintdialog.h
+	<QtGui/qabstractprintdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qprintpreviewdialog.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qprogressdialog.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qwizard.h
+	<QtGui/qdialog.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsanchorlayout.h
+	<QtGui/qgraphicsitem.h>
+	<QtGui/qgraphicslayout.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsitem.h
+	<QtCore/qglobal.h>
+	<QtCore/qobject.h>
+	<QtCore/qvariant.h>
+	<QtCore/qrect.h>
+	<QtCore/qscopedpointer.h>
+	<QtGui/qpainterpath.h>
+	<QtGui/qpixmap.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicslayout.h
+	<QtGui/qgraphicslayoutitem.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicslayoutitem.h
+	<QtCore/qscopedpointer.h>
+	<QtGui/qsizepolicy.h>
+	<QtGui/qevent.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsgridlayout.h
+	<QtGui/qgraphicsitem.h>
+	<QtGui/qgraphicslayout.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsitemanimation.h
+	<QtCore/qobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicslinearlayout.h
+	<QtGui/qgraphicsitem.h>
+	<QtGui/qgraphicslayout.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsproxywidget.h
+	<QtGui/qgraphicswidget.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicswidget.h
+	<QtGui/qfont.h>
+	<QtGui/qgraphicslayoutitem.h>
+	<QtGui/qgraphicsitem.h>
+	<QtGui/qpalette.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsscene.h
+	<QtCore/qobject.h>
+	<QtCore/qpoint.h>
+	<QtCore/qrect.h>
+	<QtGui/qbrush.h>
+	<QtGui/qfont.h>
+	<QtGui/qtransform.h>
+	<QtGui/qmatrix.h>
+	<QtGui/qpen.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicssceneevent.h
+	<QtCore/qcoreevent.h>
+	<QtCore/qpoint.h>
+	<QtCore/qscopedpointer.h>
+	<QtCore/qrect.h>
+	<QtGui/qpolygon.h>
+	<QtCore/qset.h>
+	<QtCore/qhash.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicstransform.h
+	<QtCore/QObject>
+	<QtGui/QVector3D>
+	<QtGui/QTransform>
+	<QtGui/QMatrix4x4>
+
+1301079668 /usr/include/qt4/QtCore/QObject
+	"qobject.h"
+
+1301079672 /usr/include/qt4/QtGui/QVector3D
+	"qvector3d.h"
+
+1301079673 /usr/include/qt4/QtGui/QTransform
+	"qtransform.h"
+
+1301079672 /usr/include/qt4/QtGui/QMatrix4x4
+	"qmatrix4x4.h"
+
+1298376238 /usr/include/qt4/QtGui/qgraphicsview.h
+	<QtCore/qmetatype.h>
+	<QtGui/qpainter.h>
+	<QtGui/qscrollarea.h>
+	<QtGui/qgraphicsscene.h>
+
+1298376239 /usr/include/qt4/QtGui/qinputcontext.h
+	<QtCore/qobject.h>
+	<QtCore/qglobal.h>
+	<QtGui/qevent.h>
+	<QtCore/qstring.h>
+	<QtCore/qlist.h>
+	<QtGui/qaction.h>
+
+1298376239 /usr/include/qt4/QtGui/qinputcontextfactory.h
+	<QtCore/qstringlist.h>
+
+1298376239 /usr/include/qt4/QtGui/qinputcontextplugin.h
+	<QtCore/qplugin.h>
+	<QtCore/qfactoryinterface.h>
+	<QtCore/qstringlist.h>
+
+1298376238 /usr/include/qt4/QtGui/qvfbhdr.h
+	<QtGui/qcolor.h>
+	<QtGui/qwindowdefs.h>
+	<QtCore/qrect.h>
+
+1298376238 /usr/include/qt4/QtGui/qwsembedwidget.h
+	<QtGui/qwidget.h>
+
+1298376238 /usr/include/qt4/QtGui/qboxlayout.h
+	<QtGui/qlayout.h>
+	<QtGui/qwidget.h>
+	<limits.h>
+
+1298376238 /usr/include/qt4/QtGui/qlayout.h
+	<QtCore/qobject.h>
+	<QtGui/qlayoutitem.h>
+	<QtGui/qsizepolicy.h>
+	<QtCore/qrect.h>
+	<QtCore/qmargins.h>
+	<limits.h>
+	<QtGui/qboxlayout.h>
+	<QtGui/qgridlayout.h>
+
+1298376238 /usr/include/qt4/QtGui/qlayoutitem.h
+	<QtGui/qsizepolicy.h>
+	<QtCore/qrect.h>
+	<limits.h>
+
+1298376238 /usr/include/qt4/QtGui/qgridlayout.h
+	<QtGui/qlayout.h>
+	<QtGui/qwidget.h>
+	<limits.h>
+
+1298376238 /usr/include/qt4/QtGui/qclipboard.h
+	<QtCore/qobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qformlayout.h
+	<QtGui/QLayout>
+
+1301079672 /usr/include/qt4/QtGui/QLayout
+	"qlayout.h"
+
+1298376238 /usr/include/qt4/QtGui/qgesture.h
+	<QtCore/qobject.h>
+	<QtCore/qlist.h>
+	<QtCore/qdatetime.h>
+	<QtCore/qpoint.h>
+	<QtCore/qrect.h>
+	<QtCore/qmetatype.h>
+
+1298376238 /usr/include/qt4/QtGui/qgesturerecognizer.h
+	<QtCore/qglobal.h>
+	<QtCore/qnamespace.h>
+
+1298376238 /usr/include/qt4/QtGui/qsessionmanager.h
+	<QtCore/qobject.h>
+	<QtGui/qwindowdefs.h>
+	<QtCore/qstring.h>
+	<QtCore/qstringlist.h>
+
+1298376238 /usr/include/qt4/QtGui/qshortcut.h
+	<QtGui/qwidget.h>
+	<QtGui/qkeysequence.h>
+
+1298376238 /usr/include/qt4/QtGui/qsound.h
+	<QtCore/qobject.h>
+
+1298376238 /usr/include/qt4/QtGui/qstackedlayout.h
+	<QtGui/qlayout.h>
+
+1298376238 /usr/include/qt4/QtGui/qtooltip.h
+	<QtGui/qwidget.h>
+
+1298376238 /usr/include/qt4/QtGui/qwhatsthis.h
+	<QtCore/qobject.h>
+	<QtGui/qcursor.h>
+
+1298376238 /usr/include/qt4/QtGui/qwidgetaction.h
+	<QtGui/qaction.h>
+
+1298376239 /usr/include/qt4/QtGui/qabstractproxymodel.h
+	<QtCore/qabstractitemmodel.h>
+
+1298376239 /usr/include/qt4/QtGui/qcolumnview.h
+	<QtGui/qabstractitemview.h>
+
+1298376239 /usr/include/qt4/QtGui/qdatawidgetmapper.h
+	"QtCore/qobject.h"
+
+1298376239 /usr/include/qt4/QtGui/qdirmodel.h
+	<QtCore/qabstractitemmodel.h>
+	<QtCore/qdir.h>
+	<QtGui/qfileiconprovider.h>
+
+1298376239 /usr/include/qt4/QtGui/qfileiconprovider.h
+	<QtCore/qfileinfo.h>
+	<QtCore/qscopedpointer.h>
+	<QtGui/qicon.h>
+
+1298376239 /usr/include/qt4/QtGui/qitemdelegate.h
+	<QtGui/qabstractitemdelegate.h>
+	<QtCore/qstring.h>
+	<QtGui/qpixmap.h>
+	<QtCore/qvariant.h>
+
+1298376239 /usr/include/qt4/QtGui/qitemeditorfactory.h
+	<QtCore/qmetaobject.h>
+	<QtCore/qbytearray.h>
+	<QtCore/qhash.h>
+	<QtCore/qvariant.h>
+
+1298376239 /usr/include/qt4/QtGui/qlistview.h
+	<QtGui/qabstractitemview.h>
+
+1298376239 /usr/include/qt4/QtGui/qlistwidget.h
+	<QtGui/qlistview.h>
+	<QtCore/qvariant.h>
+	<QtCore/qvector.h>
+	<QtGui/qitemselectionmodel.h>
+
+1298376239 /usr/include/qt4/QtGui/qproxymodel.h
+	<QtCore/qabstractitemmodel.h>
+
+1298376239 /usr/include/qt4/QtGui/qsortfilterproxymodel.h
+	<QtGui/qabstractproxymodel.h>
+	<QtCore/qregexp.h>
+
+1298376239 /usr/include/qt4/QtGui/qstandarditemmodel.h
+	<QtCore/qabstractitemmodel.h>
+	<QtGui/qbrush.h>
+	<QtGui/qfont.h>
+	<QtGui/qicon.h>
+	<QtCore/qdatastream.h>
+
+1298376239 /usr/include/qt4/QtGui/qstringlistmodel.h
+	<QtCore/qstringlist.h>
+	<QtGui/qabstractitemview.h>
+
+1298376239 /usr/include/qt4/QtGui/qstyleditemdelegate.h
+	<QtGui/qabstractitemdelegate.h>
+	<QtCore/qstring.h>
+	<QtGui/qpixmap.h>
+	<QtCore/qvariant.h>
+
+1298376239 /usr/include/qt4/QtGui/qtableview.h
+	<QtGui/qabstractitemview.h>
+
+1298376239 /usr/include/qt4/QtGui/qtablewidget.h
+	<QtGui/qtableview.h>
+	<QtCore/qvariant.h>
+	<QtCore/qvector.h>
+
+1298376239 /usr/include/qt4/QtGui/qtreeview.h
+	<QtGui/qabstractitemview.h>
+
+1298376239 /usr/include/qt4/QtGui/qtreewidget.h
+	<QtGui/qtreeview.h>
+	<QtGui/qtreewidgetitemiterator.h>
+	<QtCore/qvariant.h>
+	<QtCore/qvector.h>
+
+1298376239 /usr/include/qt4/QtGui/qtreewidgetitemiterator.h
+	<QtCore/qglobal.h>
+	<QtCore/qscopedpointer.h>
+
+1298376239 /usr/include/qt4/QtGui/qcompleter.h
+	<QtCore/qobject.h>
+	<QtCore/qpoint.h>
+	<QtCore/qstring.h>
+	<QtCore/qabstractitemmodel.h>
+	<QtCore/qrect.h>
+
+1298376239 /usr/include/qt4/QtGui/qdesktopservices.h
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qsystemtrayicon.h
+	<QtCore/qobject.h>
+	<QtGui/qicon.h>
+
+1298376239 /usr/include/qt4/QtGui/qundogroup.h
+	<QtCore/qobject.h>
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qundostack.h
+	<QtCore/qobject.h>
+	<QtCore/qstring.h>
+
+1298376239 /usr/include/qt4/QtGui/qundoview.h
+	<QtGui/qlistview.h>
+	<QtCore/qstring.h>
+
+1298376238 /usr/include/qt4/QtGui/qgraphicseffect.h
+	<QtCore/qobject.h>
+	<QtCore/qpoint.h>
+	<QtCore/qrect.h>
+	<QtGui/qcolor.h>
+	<QtGui/qbrush.h>
+
+1298376239 /usr/include/qt4/QtGui/qkeyeventtransition.h
+	<QtCore/qeventtransition.h>
+
+1298376239 /usr/include/qt4/QtGui/qmouseeventtransition.h
+	<QtCore/qeventtransition.h>
+
+1300801839 source:/home/flora/Dropbox/terrainViewer_GPU/dialog_box.cpp
+	<QtGui/QtGui>
+	"dialog_box.h"
+	"dtts_patchsynthesis.h"
+	<iostream>
+
+1300801498 /home/flora/Dropbox/terrainViewer_GPU/dialog_box.h
+	<QtCore/QVariant>
+	<QtGui/QAction>
+	<QtGui/QApplication>
+	<QtGui/QButtonGroup>
+	<QtGui/QCheckBox>
+	<QtGui/QDialog>
+	<QtGui/QHeaderView>
+	<QtGui/QLabel>
+	<QtGui/QLineEdit>
+	<QtGui/QPushButton>
+	<QtGui/QSpinBox>
+
+1301050254 source:/home/flora/Dropbox/terrainViewer_GPU/external/sort/sort.cu
+	<stdio.h>
+	"sort.h"
+
+1301050430 /home/flora/Dropbox/terrainViewer_GPU/external/sort/sort.h
+	"../../headers.h"
+
+1289063633 source:/home/flora/Dropbox/terrainViewer_GPU/external/sort/radixsort.cpp
+	<map>
+	<cuda_runtime.h>
+	<assert.h>
+	<algorithm>
+	"radixsort.h"
+
+1289063633 /home/flora/Dropbox/terrainViewer_GPU/external/sort/radixsort.h
+	"cuda_runtime_api.h"
+	"cudpp/cudpp.h"
+
+1289063633 source:/home/flora/Dropbox/terrainViewer_GPU/external/sort/radixsort.cu
+	"radixsort.h"
+	"cudpp/cudpp.h"
+	<stdio.h>
+	<assert.h>
+
+1226314108 /home/flora/Dropbox/terrainViewer_GPU/external/sort/gpuqsort.h
+
+1306959674 /home/flora/Dropbox/terrainViewer_GPU/cutil_math_bugfixes.h
+	"cuda_runtime.h"
+	<math.h>
+

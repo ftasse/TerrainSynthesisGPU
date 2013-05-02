@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="dtts_main .cpp" open="0" top="0" tabpos="12">
+		<Cursor position="1326" topLine="45" />
+	</File>
+	<File name="dtts_merging.cu" open="0" top="0" tabpos="1">
+		<Cursor position="22772" topLine="0" />
+	</File>
+	<File name="dtts_patchsynthesis.cu" open="0" top="0" tabpos="0">
+		<Cursor position="9678" topLine="258" />
+	</File>
+	<File name="dtts_ppa.cpp" open="0" top="0" tabpos="2">
+		<Cursor position="248" topLine="0" />
+	</File>
+	<File name="dtts_ppa.h" open="0" top="0" tabpos="11">
+		<Cursor position="4847" topLine="153" />
+	</File>
+	<File name="external/SpeedIT_Classic/si_classic.cu" open="0" top="0" tabpos="3">
+		<Cursor position="14766" topLine="558" />
+	</File>
+</CodeBlocks_layout_file>

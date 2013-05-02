@@ -1,0 +1,6 @@
+Aligned memory
+GetNext target
+Lessen noise variance speed
+Qt
+PPA
+
