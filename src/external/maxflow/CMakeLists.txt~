@@ -1,0 +1,2 @@
+SET(COMMON maxflow.cpp instances.inc graph.cpp graph.h block.h)
+ADD_LIBRARY( Dtts ${COMMON} maxflow )

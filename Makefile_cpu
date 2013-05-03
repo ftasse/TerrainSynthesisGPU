@@ -1,0 +1,50 @@
+CC=g++
+NVCC=g++
+
+HOME= ~
+
+CUDA_INCLUDES=-I$(QTDIR)/include
+CUDA_LIBS=-L./external/SpeedIT_Classic
+
+#INCLUDES=$(CUDA_INCLUDES)
+#LIBS=$(CUDA_LIBS) 
+
+NVCFLAGS=-c -g $(INCLUDES)
+NVCFLAGS_FAST=-c -O2 $(INCLUDES)
+
+CFLAGS=-c -Wall
+
+CFLAGS_FAST=-c -s -O2
+
+LDFLAGS= $(LIBS) -lGLU -lglut -lqt
+
+SOURCES= dtts_main.cpp dtts_patchsynthesis.cpp dtts_2dmorph.cpp dtts_image.cpp dtts_match.cpp dtts_merging.cpp dtts_ppa.cpp dtts_wavelet.cpp external/SpeedIT_Classic/si_classic_seq.cpp external/noise/noise.cpp  external/maxflow/graph.cpp external/maxflow/maxflow.cpp external/maxflow/maxflow.cpp
+
+OBJECTS=  dtts_main.o dtts_patchsynthesis.o dtts_2dmorph.o dtts_image.o dtts_match.o dtts_merging.o dtts_ppa.o dtts_wavelet.o external/noise/noise.o  external/maxflow/graph.o external/maxflow/maxflow.o external/SpeedIT_Classic/si_classic_seq.o
+
+EXECUTABLE=terrainSynthesisCPU
+
+all: $(SOURCES) $(EXECUTABLE)
+	
+$(EXECUTABLE): $(OBJECTS)
+	$(NVCC) $(OBJECTS)  $(LDFLAGS) -o $@ 
+	
+%.o:%.cpp
+	$(NVCC) $(NVCFLAGS_FAST) $< -o $@
+
+dtts_patchsynthesis.o: dtts_patchsynthesis.cpp
+	$(NVCC) $(NVCFLAGS_FAST) $< -o $@
+
+dtts_match.o: dtts_match.cpp
+	$(NVCC) $(NVCFLAGS_FAST) $< -o $@ 
+
+dtts_merging.o: dtts_merging.cpp
+	$(NVCC) $(NVCFLAGS_FAST) $< -o $@
+
+dtts_image.o: dtts_image.cpp
+	$(NVCC) $(NVCFLAGS_FAST) $< -o $@
+		
+clean:
+	rm -rf *.o $(EXECUTABLE)
+	rm -rf external/SpeedIT_Classic/*.o
+	rm -rf external/maxflow/*.o

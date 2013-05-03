@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GPUQSortLib", "src\GPUQSortLib.vcproj", "{0289C936-921B-4861-BE41-F40386EAB3AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Testbench", "testbench\testbench.vcproj", "{DAA19E2B-00C2-4765-A4E0-9243B9F93B8C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0289C936-921B-4861-BE41-F40386EAB3AC} = {0289C936-921B-4861-BE41-F40386EAB3AC}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0289C936-921B-4861-BE41-F40386EAB3AC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0289C936-921B-4861-BE41-F40386EAB3AC}.Debug|Win32.Build.0 = Debug|Win32
+		{0289C936-921B-4861-BE41-F40386EAB3AC}.Release|Win32.ActiveCfg = Release|Win32
+		{0289C936-921B-4861-BE41-F40386EAB3AC}.Release|Win32.Build.0 = Release|Win32
+		{DAA19E2B-00C2-4765-A4E0-9243B9F93B8C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DAA19E2B-00C2-4765-A4E0-9243B9F93B8C}.Debug|Win32.Build.0 = Debug|Win32
+		{DAA19E2B-00C2-4765-A4E0-9243B9F93B8C}.Release|Win32.ActiveCfg = Release|Win32
+		{DAA19E2B-00C2-4765-A4E0-9243B9F93B8C}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

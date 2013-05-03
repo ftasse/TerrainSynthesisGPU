@@ -1,0 +1,1691 @@
+#include "dtts_match.h"
+
+float match_time = 0;
+float paste_time = 0;
+float get_target = 0;
+float find_time = 0;
+float sort_time = 0;
+
+float mstimer(clock_t tstart, clock_t tstop)
+{
+    return 1000*(float)(tstop-tstart)/(float)(CLOCKS_PER_SEC);
+}
+
+struct compare_cost
+{
+    #if defined (__CUDACC__)
+      __host__ __device__ 
+    #endif
+    bool operator()(cost_t a, cost_t b)
+    {
+        return a.cost < b.cost;
+    }
+};
+
+compare_cost comp;
+
+void print_times()
+{
+    cerr<<" Get target: "<<get_target/1000.0<<"s\n";
+    cerr<<" Patch matching: "<<match_time/1000.0<<"s\n";
+    cerr<<" Patch sorting: "<<sort_time/1000.0<<"s\n";
+    cerr<<" Patch selection: "<<find_time/1000.0<<"s\n";
+    cerr<<" Patch merging: "<<paste_time/1000.0<<"s\n";
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+inline void swap(int & a, int & b)
+{
+    // Alternative swap doesn't use a temporary register:
+    a ^= b;
+    b ^= a;
+    a ^= b;
+}
+
+Wavelet wave(Daub8Coeffs,8,0);
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float cubicInterpol(float* mpixels, int mwidth, int mheight, const float fx, const float fy)
+{
+    const float
+    nfx = fx<0?0:(fx>mwidth-1?mwidth-1:fx),
+          nfy = fy<0?0:(fy>mheight-1?mheight-1:fy);
+    const int
+    x = (int) nfx,
+        y = (int) nfy;
+    const float
+    dx = nfx-x,
+         dy = nfy-y;
+
+    const int
+    px = x-1<0?0:x-1, nx = dx>0?x+1:x, ax = x+2>=mwidth?mwidth-1:x+2,
+                                            py = y-1<0?0:y-1, ny = dy>0?y+1:y, ay = y+2>=mheight?mheight-1:y+2;
+    const float
+    Ipp = mpixels[px+py*mwidth], Icp = mpixels[x+py*mwidth], Inp = mpixels[nx+py*mwidth], Iap = mpixels[ax+py*mwidth],
+                                       Ip = Icp + 0.5f*(dx*(-Ipp+Inp) + dx*dx*(2*Ipp-5*Icp+4*Inp-Iap) + dx*dx*dx*(-Ipp+3*Icp-3*Inp+Iap)),
+                                            Ipc = mpixels[px+y*mwidth],  Icc = mpixels[x+y*mwidth], Inc = mpixels[nx+y*mwidth],  Iac = mpixels[ax+y*mwidth],
+                                                    Ic = Icc + 0.5f*(dx*(-Ipc+Inc) + dx*dx*(2*Ipc-5*Icc+4*Inc-Iac) + dx*dx*dx*(-Ipc+3*Icc-3*Inc+Iac)),
+                                                            Ipn = mpixels[px+ny*mwidth], Icn = mpixels[x+ny*mwidth], Inn = mpixels[nx+ny*mwidth], Ian = mpixels[ax+ny*mwidth],
+                                                                    In = Icn + 0.5f*(dx*(-Ipn+Inn) + dx*dx*(2*Ipn-5*Icn+4*Inn-Ian) + dx*dx*dx*(-Ipn+3*Icn-3*Inn+Ian)),
+                                                                            Ipa = mpixels[px+ay*mwidth], Ica = mpixels[x+ay*mwidth], Ina = mpixels[nx+ay*mwidth], Iaa = mpixels[ax+ay*mwidth],
+                                                                                    Ia = Ica + 0.5f*(dx*(-Ipa+Ina) + dx*dx*(2*Ipa-5*Ica+4*Ina-Iaa) + dx*dx*dx*(-Ipa+3*Ica-3*Ina+Iaa));
+
+    return Ic + 0.5f*(dy*(-Ip+In) + dy*dy*(2*Ip-5*Ic+4*In-Ia) + dy*dy*dy*(-Ip+3*Ic-3*In+Ia));
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+inline float bspline(float t)
+{
+    t = fabs(t);
+    const float a = 2.0f - t;
+
+    if (t < 1.0f) return 2.0f/3.0f - 0.5f*t*t*a;
+    else if (t < 2.0f) return a*a*a / 6.0f;
+    else return 0.0f;
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float getH( float* src_ptr, int src_w, int src_h, int bsize, int rx, int ry, int rt, int i, int j )
+{
+    int ri = 0;
+    int rj = 0;
+    float candv=0;
+    int mid = bsize/2;
+
+    if (rt<360/DROT)
+    {
+        float ni=0;
+        float nj=0;
+        int rot = rt*DROT;
+        ni = (rx+mid) + ((i - mid)*cosf(rot*180.0/PI)) + ((j - mid) *sinf(rot*180.0/PI));
+        nj = (ry+mid) - ((i - mid)*sinf(rot*180.0/PI)) + ((j - mid) *cosf(rot*180.0/PI));
+        if (ni>=0 && nj>=0 && ni<src_w && nj<src_h)
+            candv = cubicInterpol(src_ptr,src_w,src_h,ni,nj);
+        return candv;
+    }
+    else if (rt==360/DROT)
+    {
+        ri = (rx+bsize-i-1);
+        rj = (ry+j);
+        if (ri>=0 && rj>=0 && ri<src_w && rj<src_h)
+            return src_ptr[ ri + rj*src_w  ];
+    }
+    else
+    {
+        ri = (rx+i);
+        rj = (ry+bsize-j-1);
+        if (ri>=0 && rj>=0 && ri<src_w && rj<src_h)
+            return src_ptr[ ri + rj*src_w  ];
+    }
+
+    return candv;
+}
+
+float* get_noise_stats_noFeature(vector< Image >& levels, node_list& nodes, int bsize)
+{
+    NoiseBandStats* nbs = new NoiseBandStats(levels.size());
+    int dimx = bsize, dimy=bsize;
+
+    float rx = (float) dimx;
+    rx *= rx; // diagonal
+    float ry = (float) dimy;
+    ry *= ry;
+    float r = sqrtf(rx + ry);
+
+    float* sigma = new float[levels.size()];
+    sigma[levels.size()-1] = 1.5f / r; // influence of a single grid element
+    for(int i = levels.size()-2; i >= 0; i--)
+        sigma[i] = sigma[i+1] * 2.0f;
+
+
+    unsigned int k;
+    int i, j;
+    float * diff = new float[dimx*dimy];
+
+    float* result = new float [nodes.size()*levels.size()];
+    int count = 0;
+    // evaluate
+    for (node_list::iterator it = nodes.begin(); it!=nodes.end(); it++)
+    {
+        int x = (*it).x;
+        int y = (*it).y;
+
+        for(k = 0; k < levels.size(); k++)
+        {
+            // form a difference layer
+            // but exclude edges due to boundary issues
+            for(i = 0; i < dimx; i++)
+                for(j = 0; j < dimy; j++)
+                {
+                    if(k > 0)
+                        diff[j+i*dimy] = levels[k].atXY(i+x, j+y) -levels[k-1].atXY(i+x, j+y);
+                    else
+                        diff[j+i*dimy] = levels[k].atXY(i+x, j+y);
+                }
+
+            // pass it in for evaluation
+            nbs->evalStats(k, (dimx)*(dimy), sigma[k], diff);
+        }
+
+        for(unsigned int i = 0; i <levels.size(); i++)
+            result[count*levels.size()+i]= nbs->getStdDev(i)*nbs->getStdDev(i);
+        count++;
+    }
+
+    delete [] diff;
+    delete [] sigma;
+    delete nbs;
+    return result;
+}
+
+
+float* get_noise_stats_Feature(vector< Image >& levels, node_list& nodes, int bsize)
+{
+    NoiseBandStats* nbs = new NoiseBandStats(levels.size());
+    int dimx = bsize, dimy=bsize;
+
+    float rx = (float) dimx;
+    rx *= rx; // diagonal
+    float ry = (float) dimy;
+    ry *= ry;
+    float r = sqrtf(rx + ry);
+
+    float* sigma = new float[levels.size()];
+    sigma[levels.size()-1] = 1.5f / r; // influence of a single grid element
+    for(int i = levels.size()-2; i >= 0; i--)
+        sigma[i] = sigma[i+1] * 2.0f;
+
+
+    unsigned int k;
+    int i, j;
+    float * diff = new float[dimx*dimy];
+
+    float* result = new float [nodes.size()*levels.size()];
+    int count = 0;
+    // evaluate
+    for (node_list::iterator it = nodes.begin(); it!=nodes.end(); it++)
+    {
+        int x = (*it).x-bsize/2;
+        int y = (*it).y-bsize/2;
+
+        for(k = 0; k < levels.size(); k++)
+        {
+            // form a difference layer
+            // but exclude edges due to boundary issues
+            for(i = 0; i < dimx; i++)
+                for(j = 0; j < dimy; j++)
+                {
+                    if(k > 0)
+                        diff[j+i*dimy] = levels[k].atXY(i+x, j+y) -levels[k-1].atXY(i+x, j+y);
+                    else
+                        diff[j+i*dimy] = levels[k].atXY(i+x, j+y);
+                }
+
+            // pass it in for evaluation
+            nbs->evalStats(k, (dimx)*(dimy), sigma[k], diff);
+        }
+
+        for(unsigned int i = 0; i <levels.size(); i++)
+            result[count*levels.size()+i]= nbs->getStdDev(i)*nbs->getStdDev(i);
+        count++;
+    }
+
+    delete [] diff;
+    delete [] sigma;
+    return result;
+}
+
+NoiseBandStats* get_noise_stats(vector< Image >& levels, int x, int y, int bsize)
+{
+    NoiseBandStats* nbs = new NoiseBandStats(levels.size());
+    int dimx = bsize, dimy=bsize;
+
+    float rx = (float) dimx;
+    rx *= rx; // diagonal
+    float ry = (float) dimy;
+    ry *= ry;
+    float r = sqrtf(rx + ry);
+
+    float* sigma = new float[levels.size()];
+    sigma[levels.size()-1] = 1.5f / r; // influence of a single grid element
+    for(int i = levels.size()-2; i >= 0; i--)
+        sigma[i] = sigma[i+1] * 2.0f;
+
+
+    unsigned int k;
+    int i, j;
+    float * diff = new float[dimx*dimy];
+
+    // evaluate
+    for(k = 0; k < levels.size(); k++)
+    {
+        // form a difference layer
+        // but exclude edges due to boundary issues
+        for(i = 0; i < dimx; i++)
+            for(j = 0; j < dimy; j++)
+            {
+                if(k > 0)
+                    diff[j+i*dimy] = levels[k].atXY(i+x, j+y) -levels[k-1].atXY(i+x, j+y);
+                else
+                    diff[j+i*dimy] = levels[k].atXY(i+x, j+y);
+            }
+
+        // pass it in for evaluation
+        nbs->evalStats(k, (dimx)*(dimy), sigma[k], diff);
+    }
+    delete [] diff;
+    delete [] sigma;
+    return nbs;
+}
+
+vector<float> noise_variances(vector< Image >& pyr, int x, int y, int bsize)
+{
+    vector<float> variances;
+    if (!use_noisestat) return variances;
+    NoiseBandStats* nbs =  get_noise_stats(pyr,x,y,bsize);
+    for(unsigned int i = 0; i <pyr.size(); i++)
+        variances.push_back((nbs->getStdDev(i))*nbs->getStdDev(i));
+    delete nbs;
+    return variances;
+}
+
+float compare_variances(vector<float> var1, vector<float> var2)
+{
+    float sum=0.;
+    if (var1.size()==0) return sum;
+    for (unsigned int k=0; k<var1.size(); k++)
+        sum+=(var1[k]-var2[k])*(var1[k]-var2[k]);
+    return sqrtf(sum)/var1.size();
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float compare_variances(float* var1, float* var2, int vpos, int size)
+{
+    float sum=0.;
+    if (size==0) return sum;
+    for (int k=0; k<size; k++)
+        sum+=(var1[k]-var2[k+vpos])*(var1[k]-var2[k+vpos]);
+    return sqrtf(sum)/size;
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float getDiffAng(node_t* uleafs, node_t* leafs, int lpos, int bsize, int csize)
+{
+    node_t mid(bsize/2,bsize/2);
+    float res=0;
+    for (int k=0; k<csize; k++)
+    {
+        node_t vec1 (uleafs[k].x-mid.x,uleafs[k].y-mid.y);
+        node_t vec2 (leafs[k+lpos].x-mid.x,leafs[k+lpos].y-mid.y);
+        float n1  = sqrtf(vec1.x*vec1.x+vec1.y*vec1.y);
+        float n2 = sqrtf(vec2.x*vec2.x+vec2.y*vec2.y);
+        if (n1>0)
+        {
+            vec1.x/=n1;
+            vec1.y/=n1;
+        }
+        if (n2>0)
+        {
+            vec2.x/=n2;
+            vec2.y/=n2;
+        }
+        float dot = (vec1.x*vec2.x)+(vec1.y*vec2.y);
+        float ang=acosf(dot)*180/PI;
+        res+=ang*ang;
+    }
+    return sqrtf(res)/csize;
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float get_diff(float* dest, float* bigtex, int dwidth, int ncand, int bsize, int dx, int dy, int cx, int cy, point_t p, point_t q)
+{
+    float sum=0;
+    int count=0;
+    int x0=p.x, y0=p.y;
+    int x1=q.x, y1=q.y;
+
+    bool steep = ( abs(y1 - y0) > abs(x1 - x0) );
+    if (steep)
+    {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1)
+    {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int deltax = x1 - x0;
+    int deltay = abs(y1 - y0);
+    int error = deltax / 2 ;
+    int ystep;
+    int y = y0;
+    if (y0 < y1)
+        ystep = 1 ;
+    else ystep = -1;
+
+    for (int x=x0; x<=x1; x++)
+    {
+        //if (x+dx>=0 && x<bsize && y>=0 && y<bsize )
+        {
+            if (steep)
+            {
+                int nx = y+dx;
+                int ny = x+dy;
+                if (nx<0)   nx=0;
+                if (nx>=dwidth) nx = dwidth-1;
+                if (ny<0)   ny=0;
+                if (ny>=dwidth) ny = dwidth-1;
+
+                float val = dest[nx+(ny)*dwidth]-bigtex[cx+((y+x*bsize)*ncand)];
+                sum+= val*val;
+            }
+            else
+            {
+                int nx = x+dx;
+                int ny = y+dy;
+                if (nx<0)   nx=0;
+                if (nx>=dwidth) nx = dwidth-1;
+                if (ny<0)   ny=0;
+                if (ny>=dwidth) ny = dwidth-1;
+
+                float val = dest[nx+(ny)*dwidth]-bigtex[cx+((x+y*bsize)*ncand)];
+                sum+= val*val;
+            }
+            count++;
+            error = error - deltay;
+            if (error < 0)
+            {
+                y = y + ystep;
+                error = error + deltax;
+            }
+        }
+    }
+
+    /*point_t unit(q.x-p.x, q.y-p.y);
+    float mag = sqrtf(unit.x*unit.x+unit.y*unit.y);
+    unit.x/=mag; unit.y/=mag;
+    int count = (int) mag;
+    float tmp=0;
+
+    for (int k=0; k<count; k++){
+        float fx = p.x+k*unit.x;
+        float fy = p.y+k*unit.y;
+        int xS0 = int(fx), xS1 = xS0 + 1, yS0 = int(fy), yS1 = yS0 + 1;
+
+        float dI0 = dest[yS0+dx+(xS0+dy)*dwidth]*(xS1 - fx) + dest[yS0+dx+(xS1+dy)*dwidth]*(fx - xS0); //= S(xS, yS0)
+        float dI1 = dest[yS1+dx+(xS0+dy)*dwidth]*(xS1 - fx) + dest[yS1+dx+(xS1+dy)*dwidth]*(fx - xS0); //= S(xS, yS1)
+        float dI =  dI0*(yS1 - fy) + dI1*(fy - yS0);
+
+        float sI0 = bigtex[cx+((yS0+xS0*bsize)*ncand)]*(xS1 - fx) + bigtex[cx+((yS0+xS1*bsize)*ncand)]*(fx - xS0); //= S(xS, yS0)
+        float sI1 = bigtex[cx+((yS1+xS0*bsize)*ncand)]*(xS1 - fx) + bigtex[cx+((yS1+xS1*bsize)*ncand)]*(fx - xS0); //= S(xS, yS1)
+        float sI =  sI0*(yS1 - fy) + sI1*(fy - yS0);
+
+        tmp = dI-sI;
+        tmp=dest[yS0+dx+(xS0+dy)*dwidth]-bigtex[cx+((yS0+xS0*bsize)*ncand)];
+        sum+=tmp*tmp;
+    }*/
+
+    return sqrtf(sum)/count;
+}
+
+////get_diff_profile(target,src,dwidth,sw,sh,bsize,p,dem.rot/DROT,uleafs,dem.lsize, dx,dy);
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float get_diff(float* dest, float* src, int dwidth, int src_w, int src_h, int bsize,  node_t pv, int rt, point_t p, point_t q,int dx, int dy)
+{
+    int px = pv.x;
+    int py = pv.y;
+    //int alln = bigwidth/(bsize*bsize);
+    float sum=0;
+    int count=0;
+    int x0=p.x, y0=p.y;
+    int x1=q.x, y1=q.y;
+
+    bool steep = ( abs(y1 - y0) > abs(x1 - x0) );
+    if (steep)
+    {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1)
+    {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int deltax = x1 - x0;
+    int deltay = abs(y1 - y0);
+    int error = deltax / 2 ;
+    int ystep;
+    int y = y0;
+    if (y0 < y1)
+        ystep = 1 ;
+    else ystep = -1;
+
+    for (int x=x0; x<=x1; x++)
+    {
+        //if (x>=0 && x<bsize && y>=0 && y<bsize )
+        {
+            if (steep)
+            {
+                //int ide = y + x*bsize;
+                int nx = y+dx;
+                int ny = x+dy;
+                if (nx<0)   nx=0;
+                if (nx>=dwidth) nx = dwidth-1;
+                if (ny<0)   ny=0;
+                if (ny>=dwidth) ny = dwidth-1;
+
+                float sval = getH(src,src_w,src_h, bsize, px,py,rt,y,x);
+                float val = dest[nx+(ny)*dwidth]-sval;
+                sum+= val*val;
+            }
+            else
+            {
+                //int ide = x + y*bsize;
+                int nx = x+dx;
+                int ny = y+dy;
+                if (nx<0)   nx=0;
+                if (nx>=dwidth) nx = dwidth-1;
+                if (ny<0)   ny=0;
+                if (ny>=dwidth) ny = dwidth-1;
+
+                float sval = getH(src,src_w,src_h, bsize, px,py,rt,x,y);
+                float val = dest[nx+(ny)*dwidth]-sval;
+
+                sum+= val*val;
+            }
+            count++;
+            error = error - deltay;
+            if (error < 0)
+            {
+                y = y + ystep;
+                error = error + deltax;
+            }
+        }
+    }
+
+    return sqrtf(sum)/count;
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float get_diff_profile(float* dest, float* bigtex, int dwidth, int ncand, int bsize, int dx, int dy, int cx, int cy, node_t* cand_br1, int csize)
+{
+    float total=0.;
+    int mw=bsize, mh=bsize;
+    point_t mid(mw/2,mh/2);
+
+
+    //if (csize>2)  return total;
+
+    //if (csize==2)
+    {
+
+        for (int k=0; k<csize; k++){
+
+            point_t qnode1;
+            qnode1 = point_t(cand_br1[k].x, cand_br1[k].y) ;
+            point_t vec1(qnode1.x-mid.x, qnode1.y-mid.y);
+
+            point_t pv1(-vec1.y, vec1.x);
+
+            point_t p1, np1;
+
+            p1 = point_t(mid.x+pv1.x, mid.y+pv1.y);
+            np1 = point_t(mid.x-pv1.x, mid.y-pv1.y);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+
+            qnode1.x =((mid.x+cand_br1[k].x)*1)/2; qnode1.y =((mid.y+cand_br1[k].y)*1)/2;
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+
+
+
+        }
+
+        //total/=3;
+        //total = 0;
+
+         for (int k=0; k<csize; k++)
+        {
+            point_t qnode1;
+            qnode1 = point_t(cand_br1[k].x, cand_br1[k].y) ;
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,qnode1,mid);
+        }
+
+        /*
+        point_t qnode1,qnode2;
+
+            qnode1 = (cand_br1[0].x, cand_br1[0].y) ;
+            qnode2 = (cand_br1[1].x, cand_br1[1].y) ;
+            point_t vec1(qnode1.x-mid.x, qnode1.y-mid.y);
+            point_t vec2(qnode2.x-mid.x, qnode2.y-mid.y);
+
+            point_t pv1(-vec1.y/2, vec1.x/2), pv2(-vec2.y/2, vec2.x/2);
+
+            point_t p1, np1, p2, np2;
+
+            p1 = point_t(mid.x+pv1.x, mid.y+pv1.y);
+            np1 = point_t(mid.x-pv1.x, mid.y-pv1.y);
+            p2 = point_t(mid.x+pv2.x, mid.y+pv2.y);
+            np2 = point_t(mid.x-pv2.x, mid.y-pv2.y);
+
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            p2 = point_t(qnode2.x+pv2.x, qnode2.y+pv2.y);
+            np2 = point_t(qnode2.x-pv2.x, qnode2.y-pv2.y);
+
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);
+
+            qnode1.x =((mid.x+cand_br1[0].x)*1)/2; qnode1.y =((mid.y+cand_br1[0].y)*1)/2;
+            qnode2.x =((mid.x+cand_br1[1].x)*1)/2; qnode2.y =((mid.y+cand_br1[1].y)*1)/2;
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            p2 = point_t(qnode2.x+pv2.x, qnode2.y+pv2.y);
+            np2 = point_t(qnode2.x-pv2.x, qnode2.y-pv2.y);
+
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);
+            */
+
+
+        /*
+        qnode1.x =((mid.x+cand_br1[0].x)*1)/3; qnode1.y =((mid.y+cand_br1[0].y)*1)/3;
+        qnode2.x =((mid.x+cand_br1[1].x)*1)/3; qnode2.y =((mid.y+cand_br1[1].y)*1)/3;
+
+        p1 = node_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+        np1 = node_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+        p2 = node_t(qnode2.x+pv2.x, qnode2.y+pv2.y);
+        np2 = node_t(qnode2.x-pv2.x, qnode2.y-pv2.y);
+
+        total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+        total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);
+
+        qnode1.x =((mid////get_diff_profile(target,src,dwidth,sw,sh,bsize,p,dem.rot/DROT,uleafs,dem.lsize, dx,dy);
+__host__ __device__ float get_diff(float* dest, float* src, int dwidth, int src_w, int src_h, int bsize,  node_t pv, int rt, point_t p, point_t q,int dx, int dy)
+{
+    int px = pv.x;
+    int py = pv.y;
+    //int alln = bigwidth/(bsize*bsize);
+    float sum=0;
+    int count=0;
+    int x0=p.x, y0=p.y;
+    int x1=q.x, y1=q.y;
+
+    bool steep = ( abs(y1 - y0) > abs(x1 - x0) );
+    if (steep)
+    {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1)
+    {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int deltax = x1 - x0;
+    int deltay = abs(y1 - y0);
+    int error = deltax / 2 ;
+    int ystep;
+    int y = y0;
+    if (y0 < y1)
+        ystep = 1 ;
+    else ystep = -1;
+
+    for (int x=x0; x<=x1; x++)
+    {
+        //if (x>=0 && x<bsize && y>=0 && y<bsize )
+        {
+            if (steep)
+            {
+                //int ide = y + x*bsize;
+                int nx = y+dx;
+                int ny = x+dy;
+                if (nx<0)   nx=0;
+                if (nx>=dwidth) nx = dwidth-1;
+                if (ny<0)   ny=0;
+                if (ny>=dwidth) ny = dwidth-1;
+
+                float sval = getH(src,src_w,src_h, bsize, px,py,rt,y,x);
+                float val = dest[nx+(ny)*dwidth]-sval;
+                sum+= val*val;
+            }
+            else
+            {
+                //int ide = x + y*bsize;
+                int nx = x+dx;
+                int ny = y+dy;
+                if (nx<0)   nx=0;
+                if (nx>=dwidth) nx = dwidth-1;
+                if (ny<0)   ny=0;
+                if (ny>=dwidth) ny = dwidth-1;
+
+                float sval = getH(src,src_w,src_h, bsize, px,py,rt,x,y);
+                float val = dest[nx+(ny)*dwidth]-sval;
+
+                sum+= val*val;
+            }
+            count++;
+            error = error - deltay;
+            if (error < 0)
+            {
+                y = y + ystep;
+                error = error + deltax;
+            }
+        }
+    }
+
+    return sqrtf(sum)/count;
+}
+
+__host__ __device__ float get_diff_profile(float* dest, float* bigtex, int dwidth, int ncand, int bsize, int dx, int dy, int cx, int cy, node_t* cand_br1, int csize)
+{
+    float total=0.;
+    int mw=bsize, mh=bsize;
+    point_t mid(mw/2,mh/2);
+
+
+    //if (csize>2)  return total;
+
+    //if (csize==2)
+    {
+
+        for (int k=0; k<csize; k++){
+
+            point_t qnode1;
+            qnode1 = point_t(cand_br1[k].x, cand_br1[k].y) ;
+            point_t vec1(qnode1.x-mid.x, qnode1.y-mid.y);
+
+            point_t pv1(-vec1.y, vec1.x);
+
+            point_t p1, np1;
+
+            p1 = point_t(mid.x+pv1.x, mid.y+pv1.y);
+            np1 = point_t(mid.x-pv1.x, mid.y-pv1.y);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+
+            qnode1.x =((mid.x+cand_br1[k].x)*1)/2; qnode1.y =((mid.y+cand_br1[k].y)*1)/2;
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+
+
+
+        }
+
+        //total/=3;
+        //total = 0;
+
+         for (int k=0; k<csize; k++)
+        {
+            point_t qnode1;
+            qnode1 = point_t(cand_br1[k].x, cand_br1[k].y) ;
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,qnode1,mid);
+        }
+
+        /*
+        point_t qnode1,qnode2;
+
+            qnode1 = (cand_br1[0].x, cand_br1[0].y) ;
+            qnode2 = (cand_br1[1].x, cand_br1[1].y) ;
+            point_t vec1(qnode1.x-mid.x, qnode1.y-mid.y);
+            point_t vec2(qnode2.x-mid.x, qnode2.y-mid.y);
+
+            point_t pv1(-vec1.y/2, vec1.x/2), pv2(-vec2.y/2, vec2.x/2);
+
+            point_t p1, np1, p2, np2;
+
+            p1 = point_t(mid.x+pv1.x, mid.y+pv1.y);
+            np1 = point_t(mid.x-pv1.x, mid.y-pv1.y);
+            p2 = point_t(mid.x+pv2.x, mid.y+pv2.y);
+            np2 = point_t(mid.x-pv2.x, mid.y-pv2.y);
+
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            p2 = point_t(qnode2.x+pv2.x, qnode2.y+pv2.y);
+            np2 = point_t(qnode2.x-pv2.x, qnode2.y-pv2.y);
+
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+            total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);
+
+            qnode1.x =((mid.x+cand_br1[0].x)*1)/2; qnode1.y =((mid.y+cand_br1[0].y)*1)/2;
+            qnode2.x =((mid.x+cand_br1[1].x)*1)/2; qnode2.y =((mid.y+cand_br1[1].y)*1)/2;
+.x+cand_br1[0].x)*2)/3; qnode1.y =((mid.y+cand_br1[0].y)*2)/3;
+        qnode2.x =((mid.x+cand_br1[1].x)*2)/3; qnode2.y =((mid.y+cand_br1[1].y)*2)/3;
+
+        p1 = node_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+        np1 = node_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+        p2 = node_t(qnode2.x+pv2.x, qnode2.y+pv2.y);
+        np2 = node_t(qnode2.x-pv2.x, qnode2.y-pv2.y);
+
+        total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p1,np1);
+        total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,p2,np2);*/
+
+        /*node_t vec(-(qnode1.y-qnode2.y)/2,(qnode1.x-qnode2.x)/2);
+
+        qnode1 = node_t(mid.x+vec.x,mid.y+vec.y);
+        qnode2 = node_t(mid.x-vec.x,mid.y-vec.y);
+        total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,qnode1, mid);
+        total += get_diff(dest,bigtex,dwidth,ncand,bsize,dx,dy,cx,cy,mid, qnode2);*/
+    }
+
+    return total/csize;
+}
+
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float get_diff_profile(float* dest, float* src, int dw, int sw, int sh, int bsize, node_t pv, int rt, node_t* cand_br1, int csize,int dx, int dy)
+{
+    /*float total=0.;
+    int mw=bsize, mh=bsize;
+    node_t mid(mw/2,mh/2);
+
+    for (int k=0; k<csize; k++)
+    {
+        total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,cand_br1[k],mid, dx, dy);
+    }
+    if (csize>2)  return total;
+
+    if (csize==2)
+    {
+        node_t qnode1,qnode2;
+
+        qnode1 = cand_br1[0];
+        qnode2=cand_br1[1];
+        node_t vec(-(qnode1.y-qnode2.y)/2,(qnode1.x-qnode2.x)/2);
+
+        qnode1 = node_t(mid.x+vec.x,mid.y+vec.y);
+        qnode2 = node_t(mid.x-vec.x,mid.y-vec.y);
+        total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,qnode1, mid,dx, dy);
+        total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,mid, qnode2, dx, dy);
+    }
+    return total;*/
+
+    float total=0.;
+    int mw=bsize, mh=bsize;
+    point_t mid(mw/2,mh/2);
+
+
+    //if (csize>2)  return total;
+
+    //if (csize==2)
+    {
+
+        for (int k=0; k<csize; k++){
+
+            point_t qnode1;
+            qnode1 = point_t(cand_br1[k].x, cand_br1[k].y) ;
+            point_t vec1(qnode1.x-mid.x, qnode1.y-mid.y);
+
+            point_t pv1(-vec1.y, vec1.x);
+
+            point_t p1, np1;
+
+            p1 = point_t(mid.x+pv1.x, mid.y+pv1.y);
+            np1 = point_t(mid.x-pv1.x, mid.y-pv1.y);
+            total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,p1,np1, dx, dy);
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,p1,np1, dx, dy);
+
+            qnode1.x =((mid.x+cand_br1[k].x)*1)/2; qnode1.y =((mid.y+cand_br1[k].y)*1)/2;
+
+            p1 = point_t(qnode1.x+pv1.x, qnode1.y+pv1.y);
+            np1 = point_t(qnode1.x-pv1.x, qnode1.y-pv1.y);
+            total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,p1,np1, dx, dy);
+        }
+
+        //total/=3;
+        //total = 0;
+
+         for (int k=0; k<csize; k++)
+        {
+            point_t qnode1;
+            qnode1 = point_t(cand_br1[k].x, cand_br1[k].y) ;
+            total += get_diff(dest,src,dw,sw,sh,bsize,pv,rt,qnode1,mid, dx, dy);
+        }
+    }
+        return total/csize;
+}
+
+float ssd(Image& dest, Image& src, int bsize, int dx, int dy, int sx, int sy)
+{
+    float sum = 0.;
+    int count = 0;
+    for (int y=0; y<bsize; y++)
+        for (int x=0; x<bsize; x++)
+            if (x+dx<dest.width() && y+dy<dest.height() && dest(x+dx,y+dy)>0.)
+            {
+                count++;
+                float val = dest(x+dx,y+dy) - src (x+sx,y+sy);
+                sum+= val*val;
+            }
+    if (count==0) count++;
+    return sqrtf(sum/count);
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float ssdf(float* dest, float* bigtex, int ncand, int bsize, int cx)
+{
+    float sum = 0.0f;
+    int count = 0.0;
+    for (int x=0; x<bsize*bsize; x++)
+    {
+        float dval = dest[x];
+        if ( dval!=0.)
+        {
+            float sval = bigtex[cx+x*ncand];//bigtex[cx+(x*ncand)];
+            float val = dval-sval;
+            sum+= val*val;
+            count++;
+        }
+    }
+    count++;
+    return sqrtf(sum)/count;
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float ssdf(float* dest, float* src, int src_w, int src_h, int bsize, int px, int py, int rt)
+{
+    float sum = 0.;
+    int count = 0; ;
+    for (int x=0; x<bsize*bsize; x++)
+        if ( dest[x]!=0.)
+        {
+            float sval = getH(src, src_w,src_h, bsize, px,py,rt,(x%bsize),(x/bsize));
+            float val = dest[x]-sval;
+            sum+= val*val;
+            count++;
+        }
+    count++;
+    return sqrtf(sum)/count;
+}
+
+vector<node_t> getChildren(node_t cnode, Tree& dem_features, int bsize, int rot=0, int mir=0)
+{
+    node_list leafs = dem_features.getcontrolpts(cnode); //control_pts(*it,radius);
+    vector<node_t> cand_br;
+    for ( node_list::const_iterator iter = leafs.begin(); iter != leafs.end(); iter++ )
+    {
+        node_t leaf = *iter;
+        int lx = leaf.x+(bsize/2-cnode.x);
+        int ly = leaf.y+(bsize/2-cnode.y);
+        cand_br.push_back(node_t(lx,ly));
+    }
+    if (rot!=0) rotate_pts(cand_br,node_t(bsize/2,bsize/2),rot);
+    if (mir==1) mirrorX_pts(cand_br,bsize);
+    else if (mir==2) mirrorY_pts(cand_br,bsize);
+
+    return cand_br;
+
+}
+
+float getDiffAng(vector<node_t> uleafs, vector<node_t> leafs, int bsize)
+{
+    node_t mid(bsize/2,bsize/2);
+    float res=0;
+    for (unsigned int k=0; k<uleafs.size(); k++)
+    {
+        node_t vec1 (uleafs[k].x-mid.x,uleafs[k].y-mid.y);
+        node_t vec2 (leafs[k].x-mid.x,leafs[k].y-mid.y);
+        float dot = (vec1.x*vec2.x)+(vec1.y*vec2.y);
+        dot/=sqrtf((vec1.x*vec1.x + vec1.y*vec1.y)*(vec2.x*vec2.x + vec2.y*vec2.y));
+        res+=abs(acosf(dot))*PI/180;
+    }
+    return res;
+}
+
+void paste_patch(Image& dest, Image& patch, int drange, int dx, int dy)
+{
+    patch_merging(&dest, &patch, dx, dy,1,drange);
+}
+
+void getCand(Image& cand, float* bigtex, int ncand, int cx)
+{
+    for (int j=0; j<cand.height(); j++)
+        for (int i=0; i<cand.width(); i++)
+        {
+            cand(i,j)=bigtex[cx+(i+j*cand.width())*ncand];
+        }
+}
+
+void getCand(Image& cand, float* cands, int k)
+{
+    int bsize = cand.width();
+    for (int id=0; id<bsize*bsize; id++)
+    {
+        cand.getPixels()[id]=cands[id+k*(bsize*bsize)];
+    }
+}
+
+void getCand(Image& cand, Image& src, int rx, int ry, int rt)
+{
+    int bsize = cand.width();
+    for (int j=0; j<cand.height(); j++)
+        for (int i=0; i<cand.width(); i++)
+        {
+            cand(i,j)=getH(src.getPixels(),src.width(),src.height(),bsize,rx,ry,rt,i,j);
+        }
+}
+
+Image findCand(Image& dest, float* bigtex, int ncand, vector<cost_t> candidates, cost_t& prev, int bsize, int dx, int dy)
+{
+    int s = candidates.size();
+    if (s>KNUM) s=KNUM;
+
+    float mini = 10*INF;
+    cost_t choice;
+    choice.org = node_t(-1,-1);
+    int k=0, it=0, csize=candidates.size();
+    while (k<csize && it<s)	{
+        if (prev.org.x!=candidates[k].org.x || prev.org.y!=candidates[k].org.y )
+        {
+            Image cand(bsize,bsize);
+            getCand(cand,bigtex,ncand,candidates[k].tnode.x);
+            //cand.savePGM("/tmp/cand.pgm");
+            float cost = graphCut_cost(&dest,&cand,dx,dy);
+            if (cost<mini)
+            {
+                mini = cost;
+                choice = candidates[k];
+            }
+            it++;
+        }
+        k++;
+    }
+    if (choice.org.x<0){
+        choice = candidates[0];
+        //printf("Help!!! %d %d %d\n", it, k, csize);
+    }
+
+    //printf("%3d %3d %3d --- %3d %3d\n", choice.org.x, choice.org.y, choice.tnode.x,prev.org.x,prev.org.y);
+    Image res(bsize,bsize);
+    getCand(res,bigtex,ncand,choice.tnode.x);
+    prev = choice;
+    return res;
+}
+
+Image findCand(Image& dest, Image src, vector<cost_t> candidates, cost_t& prev, int bsize, int dx, int dy)
+{
+    int s = candidates.size();
+    if (s>KNUM) s=KNUM;
+
+    float mini = 10*INF;
+    cost_t choice;
+    choice.org = node_t(-1,-1);
+   int k=0, it=0, csize=candidates.size();
+    while (k<csize && it<s)	{
+        if (prev.org.x!=candidates[k].org.x || prev.org.y!=candidates[k].org.y )
+        {
+            Image cand(bsize,bsize);
+            getCand(cand,src,candidates[k].org.x,candidates[k].org.y,candidates[k].rot/DROT);
+            float cost = graphCut_cost(&dest,&cand,dx,dy);
+            if (cost<mini)
+            {
+                mini = cost;
+                choice = candidates[k];
+            }
+            it++;
+        }
+        k++;
+    }
+    if (choice.org.x<0)   choice = candidates[0];
+
+    Image res(bsize,bsize);
+    getCand(res,src,choice.org.x,choice.org.y,choice.rot/DROT);
+    prev = choice;
+    return res;
+}
+
+float* matchingPrepocessing(Tree& dem_features, vector<Image>& src_pyr, node_list& dem_nodes, node_t* dnodes, node_t* dem_leafs, node_t* dem_lsizes, int bsize)
+{
+    int nsize  =  dem_nodes.size();
+    float* dem_vars = get_noise_stats_Feature(src_pyr, dem_nodes, bsize);
+
+    int count=0;
+    for (node_list::const_iterator it = dem_nodes.begin(); it != dem_nodes.end(); it++ )
+    {
+        dnodes[count] = *it;
+        count++;
+    }
+
+    int rt = 0;
+    int rl = 0;
+    int cl=0;
+    for (int kn=0; kn<nsize; kn++)
+    {
+        node_t cnode = dnodes[kn];
+        for (int rot=0; rot<360; rot+=DROT)
+        {
+            vector<node_t> candleafs = getChildren(cnode,dem_features,bsize,rot);
+            dem_lsizes[rl].x = cl;
+            dem_lsizes[rl].y = candleafs.size();
+            cl += dem_lsizes[rl].y;
+            rl++;
+            for (unsigned int k=0; k<candleafs.size(); k++)
+                dem_leafs[rt++]=candleafs[k];
+
+        }
+        for (int m=0; m<DMIR; m++)
+        {
+            int mir = m+1;
+            vector<node_t> candleafs = getChildren(cnode,dem_features,bsize,0,mir);
+            dem_lsizes[rl].x = cl;
+            dem_lsizes[rl].y = candleafs.size();
+            cl += dem_lsizes[rl].y;
+            rl++;
+            for (unsigned int k=0; k<candleafs.size(); k++)
+            {
+                dem_leafs[rt++]=candleafs[k];
+            }
+        }
+    }
+    return dem_vars;
+}
+
+float* matchingPrepocessing(vector<Image>& src_pyr, node_list& dem_nodes, node_t* dnodes, int bsize)
+{
+    //unsigned int nsize  =  dem_nodes.size();
+    float* dem_vars = get_noise_stats_Feature(src_pyr, dem_nodes, bsize);
+
+    int count=0;
+    for (node_list::const_iterator it = dem_nodes.begin(); it != dem_nodes.end(); it++ )
+    {
+        dnodes[count] = *it;
+        count++;
+    }
+    return dem_vars;
+
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+bool onBoundary(float* dest, int dwidth, int dheight, int x, int y)
+{
+    return ( (x+1<dwidth  && dest[x+1+y*dwidth]<=BG) ||
+             (x-1>=0      && dest[x-1+y*dwidth]<=BG) ||
+             (y+1<dheight && dest[x+(y+1)*dwidth]<=BG) ||
+             (y-1>=0      && dest[x+(y-1)*dwidth]<=BG) );
+}
+
+float getPriority(node_t p, float* dest, float* confi, int dwidth, int dheight, int bsize)
+{
+    float Pr=0.0f;
+    float C = 0.0f;
+    float G = 0.0f;
+    int x = p.x-bsize/2;
+    int y = p.y-bsize/2;
+
+
+
+    point_t iso(0.0f,0.0f);
+    point_t nor(0.0f,0.0f);
+
+    for (int i=0; i<bsize; i++)
+        for (int j=0; j<bsize; j++)
+        {
+            if (x+i>=0 && y+j>=0 && x+i<dwidth && y+j<dheight && dest[x+i+(y+j)*dwidth]>BG)
+            {
+                C+=confi[(x+i)+(y+j)*dwidth];
+            }
+
+        }
+
+    x = p.x;
+    y = p.y;
+
+    {
+
+        float gx = 0.0f;
+        float gy = 0.0f;
+        //cout<<x<<" "<<y<<" "<<x-1<<" "<<y-1<<" "<<x+1<<" "<<y+1<<endl;
+        if (x-1>=0 && y-1>=0 && dest[x-1+(y)*dwidth]>BG && dest[x+(y-1)*dwidth]>BG)
+        {
+            gx = dest[x+(y)*dwidth]-dest[x-1+(y)*dwidth];
+            gy = dest[x+(y)*dwidth]-dest[x+(y-1)*dwidth];
+
+        }
+        else if (x+1<dwidth && y+1<dheight && dest[x+1+(y)*dwidth]>BG && dest[x+(y+1)*dwidth]>BG)
+        {
+            gx = (float) dest[x+1+(y)*dwidth]-dest[x+(y)*dwidth];
+            gy = (float) dest[x+(y+1)*dwidth]-dest[x+(y)*dwidth];
+        }
+        iso = point_t(-gy,gx);
+
+        int kt = 0;
+        node_t a,b;
+        for (int m=-1; m<=1; m++) for (int n=-1; n<=1; n++)  if (m!=0 || n!=0)
+                    if (x+m>=0 && x+m<dwidth && y+n>=0 && y+n<dheight && dest[x+n+(y+n)*dwidth]>BG && onBoundary(dest,dwidth,dheight,x,y)   )
+                    {
+                        if (kt==0)	a = node_t(x+m,y+n);
+                        else if (kt==1)	b = node_t(x+m,y+n);
+                        else break;
+                        kt++;
+                    }
+        nor = point_t(-(a.y-b.y),a.x-b.x);
+        float mag = sqrtf(nor.x*nor.x+nor.y*nor.y);
+        if (mag!=0)
+        {
+            nor.x/=mag;
+            nor.y/=mag;
+        }
+
+        G = ((nor.x*iso.x) + (nor.y*iso.y))/255.0f;
+    }
+
+    C/=bsize*bsize;
+    //Pr = C*G;
+    Pr = (C) + (G);
+
+    return Pr;
+}
+
+void getNextTarget(float* dest, float* conf, list<cost_t>& omega, int dwidth, int dheight, int bsize,int px, int py)
+{
+    //cout<<"Get omega: "<<omega.size()<<endl;
+    if (px<-1 && py<-1)
+    {
+
+        for (int y=0; y<dheight; y++)
+            for (int x=0; x<dwidth; x++)
+            {
+                if (dest[x+y*dwidth]>BG && onBoundary(dest,dwidth,dheight,x,y))
+                {
+                    omega.push_back(cost_t(node_t(x,y), getPriority(node_t(x,y),dest,conf,dwidth,dheight,bsize)));
+
+                }
+
+            }
+
+        //make_heap (v.begin(),v.end());
+
+
+    }
+    else
+    {
+        vector<cost_t> erasen;
+        //omega.remove(cost_t(node_t(px,py)));
+        for (list<cost_t>::iterator it=omega.begin(); it!=omega.end(); it++)
+        {
+            cost_t c = *it;
+            node_t p = c.org;
+            if (ndistance(p,node_t(px,py))<bsize/2) erasen.push_back(c);
+
+        }
+        //cout<<"Erase: "<<px<<" "<<py<<" "<<omega.size()<<" "<<erasen.size()<<endl;
+        for (unsigned int k=0; k<erasen.size(); k++)
+        {
+            //cout<<erasen[k].org.x<<"/"<<erasen[k].org.y<<endl;
+            omega.remove(erasen[k]);
+        }
+
+        for (int j=-bsize; j<bsize; j++)
+            for (int i=-bsize; i<bsize; i++)
+            {
+                int x = px+i;
+                int y = py+j;
+                if ((x<px-bsize/2 || x>=px+bsize/2 || y<py-bsize/2 || y>=py+bsize/2 )
+                        && x>=0 && x<dwidth && y>=0 && y<dheight && dest[x+y*dwidth]>BG && onBoundary(dest,dwidth,dheight,x,y))
+
+                    //
+                    omega.push_back(cost_t(node_t(x,y), getPriority(node_t(x,y),dest, conf, dwidth,dheight,bsize)));
+            }
+
+    }
+
+//cout<<omega.size()<<endl;
+}
+
+#if defined (__CUDACC__)
+__host__
+#endif
+void buildCandidates_noFeature(cost_t* candidates, float* src_ptr, node_t* dnodes, int src_w, int src_h, int nsize,  int bsize)
+{
+
+
+    int rs = (360/DROT+ DMIR);
+
+    for (int k=0; k<nsize*rs; k++)
+    {
+
+        int kn = k%(nsize);
+        int rt = k/(nsize);
+        node_t pnode = dnodes[kn];
+        int rx = pnode.x;
+        int ry = pnode.y;
+
+        int rot = rt*DROT;
+
+        cost_t c(node_t(rx,ry),0,rot,0,0);
+
+        {
+            //int kpos = k;//(kn+rt*nsize);
+            c.vpos = kn*3;
+
+            c.skip = false;
+
+            for (int id=0; id<bsize*bsize; id++)
+            {
+
+                int i = id%bsize;
+                int j = id/bsize;
+                //cout<<i<<"/"<i<<": "<<<<endl;
+                float candv=getH(src_ptr,src_w,src_h,bsize,rx,ry,rt,i,j);
+                if (candv<=BG)
+                {
+                    c.skip = true;
+                }
+            }
+
+            candidates[k]=c;
+
+
+
+        }
+    }
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float getCost_noFeature(float* dest, float* src, float* dem_vars, float* usr_var, cost_t dem, int sw, int sh, int bsize)
+{
+    node_t p= dem.org;
+    int rt = dem.rot/DROT;
+    float tmp = 50*ssdf(dest,src,sw,sh,bsize,p.x,p.y,rt);
+    if (use_noisestat) tmp+=0.0001*compare_variances(usr_var,dem_vars,dem.vpos,NLEVEL);
+    return tmp;
+}
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float getCost_Feature(float* dest, float* target, float* bigtex, int twidth, int ncand, float* dem_vars, node_t* dem_leafs, float* usr_var, node_t* uleafs, cost_t dem,int bsize, int dx, int dy )
+{
+    float tmp = 0.;
+    int cx = dem.tnode.x;
+    int cy = dem.tnode.y;
+    //if (use_cut) {Image cand(bsize, bsize); getCand(cand, bigtex, cx/(bsize*bsize)); tmp+=graphCut_cost(&dest,&cand,dx,dy);}
+    //if (use_bend && dem.lsize>=2) tmp+= 1000*get_tps(uleafs,dem_leafs,dem.lpos,bsize,dem.lsize) ;
+    if (use_noisestat)  tmp+=0.001*compare_variances(usr_var,dem_vars,dem.vpos,NLEVEL);
+    if (use_angle) tmp+= 2*getDiffAng(uleafs,dem_leafs,dem.lpos,bsize,dem.lsize);
+    if (use_profile)  tmp+= 5*get_diff_profile(target,bigtex,twidth,ncand, bsize,dx,dy,cx,cy,uleafs,dem.lsize);
+    if (use_ssd) tmp+= ssdf(dest,bigtex,ncand,bsize,cx);
+
+    return tmp;
+}
+
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float getCost_noFeature(float* dest, float* bigtex, int ncand, float* dem_vars, float* usr_var, cost_t dem,int bsize)
+{
+    float tmp = 0.;
+    int cx = dem.tnode.x;
+    //if (use_cut) {Image cand(bsize, bsize); getCand(cand, bigtex, cx/(bsize*bsize)); tmp+=graphCut_cost(&dest,&cand,dx,dy);}
+    //if (use_bend && dem.lsize>=2) tmp+= 1000*get_tps(uleafs,dem_leafs,dem.lpos,bsize,dem.lsize) ;
+    if (use_noisestat)  tmp+=0.0001*compare_variances(usr_var,dem_vars,dem.vpos,NLEVEL);
+    if (use_ssd) tmp+= 50*ssdf(dest,bigtex,ncand,bsize,cx);
+
+    return tmp;
+}
+
+
+#if defined (__CUDACC__)
+__host__ __device__ 
+#endif
+float getCost_Feature(float* dest, float* target, float* src, int dwidth, float* dem_vars, node_t* dem_leafs, float* usr_var, node_t* uleafs, cost_t dem, int sw, int sh, int bsize,int dx, int dy)
+{
+    float tmp = 0.;
+
+    node_t p = dem.org;
+
+    if (use_noisestat)  tmp+=0.001*compare_variances(usr_var,dem_vars,dem.vpos,NLEVEL);
+
+    if (use_angle) tmp+= 2*getDiffAng(uleafs,dem_leafs,dem.lpos,bsize,dem.lsize);
+
+    if (use_profile)  tmp+= 5*get_diff_profile(target,src,dwidth,sw,sh,bsize,p,dem.rot/DROT,uleafs,dem.lsize, dx,dy);
+
+    if (use_ssd) tmp+= ssdf(dest,src,sw,sh,bsize,p.x,p.y,dem.rot/DROT);
+    return tmp;
+}
+
+#if defined (__CUDACC__)
+__host__ 
+#endif
+void ComputeCosts_Feature(float* dest,float* target, float* bigtex, int twidth, int ncand, cost_t* candidates, int csize, float* dem_vars, node_t* dem_leafs, float* usr_var, node_t* uleafs, int bsize, int lsize, int dx, int dy)
+{
+    for ( int k=0; k<csize; k++ )
+    {
+
+        if ( (!candidates[k].skip) && lsize==candidates[k].lsize)
+        {
+            candidates[k].cost = getCost_Feature(dest, target, bigtex, twidth, ncand, dem_vars, dem_leafs, usr_var, uleafs, candidates[k], bsize, dx,dy);
+        }
+        else if (!candidates[k].skip){
+            candidates[k].cost = (INF/2)+ssdf(dest,bigtex,ncand,bsize,candidates[k].tnode.x);
+        }
+        else
+        {
+            candidates[k].cost = INF;
+        }
+    }
+}
+
+#if defined (__CUDACC__)
+__host__
+#endif
+void ComputeCosts_noFeature(float* dest,float* bigtex, int ncand, cost_t* candidates, int csize, float* dem_vars, float* usr_var, int bsize)
+{
+    for ( int k=0; k<csize; k++ )
+    {
+
+        if ( (!candidates[k].skip))
+        {
+            candidates[k].cost = getCost_noFeature(dest, bigtex, ncand, dem_vars, usr_var, candidates[k], bsize);
+        }
+        else
+        {
+            candidates[k].cost = INF;
+        }
+    }
+}
+
+void ComputeCosts_noFeature( float* dest, float* src, int sw, int sh, cost_t* candidates, int csize, float* dem_vars, float* usr_var, int bsize)
+{
+    for (int k=0; k<csize; k++)
+    {
+        if ( (!candidates[k].skip))
+        {
+            candidates[k].cost = getCost_noFeature(dest, src, dem_vars, usr_var, candidates[k], sw, sh, bsize);
+        }
+        else
+        {
+            candidates[k].cost = INF;
+        }
+        //cout<<candidates[k].org.x<<"/"<<candidates[k].org.y<<"/"<<candidates[k].rot<<": "<<candidates[k].cost<<endl;
+    }
+    //cin.get();
+
+}
+
+#if defined (__CUDACC__)
+__host__
+#endif
+void ComputeCosts_Feature( float* dest, float* target,  float* src, int dwidth, int sw, int sh, cost_t* candidates, int csize, float* dem_vars, node_t* dem_leafs, float* usr_var, node_t* uleafs, int bsize, int lsize, int dx, int dy)
+{
+    for (int k=0; k<csize; k++)
+    {
+        if ( (!candidates[k].skip) && lsize==candidates[k].lsize)
+        {
+            candidates[k].cost = getCost_Feature(dest, target, src,dwidth,  dem_vars, dem_leafs, usr_var, uleafs, candidates[k], sw, sh, bsize,dx,dy);
+        }
+        else if (!candidates[k].skip){
+            candidates[k].cost = (INF/2)+ssdf(dest,src,sw,sh,bsize,candidates[k].org.x,candidates[k].org.y,candidates[k].rot/DROT);
+        }
+        else
+        {
+            candidates[k].cost = INF;
+        }
+    }
+}
+
+void buildCandidates_Feature(cost_t* candidates, float* bigtex, float* src_ptr, node_t* dnodes, node_t* dem_lsizes, int nsize, int ncand, int src_w, int src_h, int bsize)
+{
+
+    //cout<<"Prepare candidates!\n";
+    int cx=0, cy=0;
+    int rs = (360/DROT+ DMIR);
+    //cout<<"Prepare candidates!\n";
+
+    for (int k=0; k<nsize*rs; k++)
+    {
+        int kn = k%(nsize);
+        int rt = k/(nsize);
+
+        node_t pnode = dnodes[kn];
+        int rx = pnode.x-bsize/2;
+        int ry = pnode.y-bsize/2;
+
+        int rot = rt*DROT;
+
+
+
+        cost_t c(node_t(rx,ry),0,rot,0,0);
+
+        {
+            c.vpos = kn*3;
+
+            c.skip = false;
+
+            cx = k*bsize*bsize;
+            c.tnode = node_t(cx,cy);
+            c.lpos = dem_lsizes[k].x;
+            c.lsize = dem_lsizes[k].y;
+
+            for (int id=0; id<bsize*bsize; id++)
+            {
+
+                int i = id%bsize;
+                int j = id/bsize;
+                //cout<<i<<"/"<j<<": "<<<<endl;
+                float candv=getH(src_ptr,src_w,src_h,bsize,rx,ry,rt,i,j);
+                (bigtex)[(cx)+(i+j*bsize)*ncand] = candv;
+
+                if (candv<=BG)
+                {
+                    c.skip = true;
+                }
+            }
+            candidates[k]=c;
+        }
+    }
+}
+
+#if defined (__CUDACC__)
+__host__
+#endif
+void buildCandidates_noFeature(cost_t* candidates, float* bigtex, float* src_ptr, node_t* dnodes, int nsize, int ncand, int src_w, int src_h, int bsize)
+{
+
+    //cout<<"Prepare candidates!\n";
+    int cx=0, cy=0;
+    int rs = (360/DROT+ DMIR);
+    //cout<<"Prepare candidates!\n";
+
+    for (int k=0; k<nsize*rs; k++)
+    {
+        int kn = k%(nsize);
+        int rt = k/(nsize);
+
+        node_t pnode = dnodes[kn];
+        int rx = pnode.x-bsize/2;
+        int ry = pnode.y-bsize/2;
+
+        int rot = rt*DROT;
+
+
+
+        cost_t c(node_t(rx,ry),0,rot,0,0);
+
+        {
+            c.vpos = kn*3;
+
+            c.skip = false;
+
+            cx = k*bsize*bsize;
+            c.tnode = node_t(cx,cy);
+
+            for (int id=0; id<bsize*bsize; id++)
+            {
+
+                int i = id%bsize;
+                int j = id/bsize;
+                //cout<<i<<"/"<j<<": "<<<<endl;
+                float candv=getH(src_ptr,src_w,src_h,bsize,rx,ry,rt,i,j);
+                (bigtex)[(cx)+(i+j*bsize)*ncand] = candv;
+
+                if (candv<=BG)
+                {
+                    c.skip = true;
+                }
+            }
+            candidates[k]=c;
+        }
+    }
+}
+
+#if defined (__CUDACC__)
+__host__
+#endif
+void buildCandidates_Feature(cost_t* candidates, float* src_ptr, node_t* dnodes,  node_t* dem_lsizes, int src_w, int src_h, int nsize,  int bsize)
+{
+
+    //cout<<"Prepare candidates!\n";
+    int rs = (360/DROT+ DMIR);
+    //cout<<"Prepare candidates!\n";
+
+    for (int k=0; k<nsize*rs; k++)
+    {
+        int kn = k%(nsize);
+        int rt = k/(nsize);
+
+        node_t pnode = dnodes[kn];
+        int rx = pnode.x-bsize/2;
+        int ry = pnode.y-bsize/2;
+
+        int rot = rt*DROT;
+
+
+
+        cost_t c(node_t(rx,ry),0,rot,0,0);
+
+        {
+            c.vpos = kn*3;
+
+            c.skip = false;
+
+            c.lpos = dem_lsizes[k].x;
+            c.lsize = dem_lsizes[k].y;
+
+
+            for (int id=0; id<bsize*bsize; id++)
+            {
+
+
+                int i = id%bsize;
+                int j = id/bsize;
+                //cout<<i<<"/"<i<<": "<<<<endl;
+                float candv=getH(src_ptr,src_w,src_h,bsize,rx,ry,rt,i,j);
+                if (candv<=BG)
+                {
+                    c.skip = true;
+                }
+            }
+
+            candidates[k]=c;
+
+
+
+        }
+    }
+
+}
+
+Image findCandidate(Image& dest, Image& src, int bsize, int ssize, int dx, int dy)
+{
+
+    int i,j, sx=-1, sy=-1;
+    float tmp,smin  = 10000000.f;
+
+    if (dx==0 && dy==0)
+    {
+        sx = rand() % (src.width()-bsize);
+        sy = rand() % (src.height()-bsize);
+    }
+    else
+        for (j = 0; j<src.height()-bsize; j+=ssize/2)
+            for (i = 0; i<src.width()-bsize; i+=ssize/2)
+            {
+                Image patch = src.get_crop(i,j,i+(bsize-1),j+(bsize-1));
+                //tmp = graphCut_cost(&dest,&patch,dx,dy);
+                tmp = ssd(dest,src,bsize,dx,dy,i,j);
+                if (tmp<smin)
+                {
+                    smin=tmp;
+                    sx = i;
+                    sy = j;
+                }
+            }
+
+    return src.get_crop(sx,sy,sx+(bsize-1),sy+(bsize-1));
+
+}
+
+void patch_synthesis(Terrain& dest, Terrain& src,int bsize, int osize)
+{
+    int dx,dy;
+    clock_t start_t, end_t;
+    start_t = clock();
+    //dy=0;
+    for (dy = 0; dy<dest.height()-osize; dy+=osize)
+        for (dx = 0; dx<dest.width()-osize; dx+=osize)
+        {
+            Image patch = findCandidate(dest,src,bsize,osize,dx,dy);
+
+            patch_merging(&dest, &patch, dx, dy,1,bsize/10.);
+
+            dest.savePGM("/tmp/res_tmp_cpu.pgm");
+            dest.saveTerragen("/tmp/res_tmp_cpu.ter");
+        }
+
+    end_t = clock();
+    float elapsed = ((float)( end_t - start_t )) /CLOCKS_PER_SEC;
+    cout<<"Elapsed time: "<<elapsed<<" s.\n";
+
+}

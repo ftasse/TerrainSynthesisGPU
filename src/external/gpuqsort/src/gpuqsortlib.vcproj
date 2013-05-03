@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8,00"
+	Name="GPUQSortLib"
+	ProjectGUID="{0289C936-921B-4861-BE41-F40386EAB3AC}"
+	RootNamespace="GPUQSortLib"
+	Keyword="Win32Proj"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)\lib\windows\$(ConfigurationName)\dll"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="10"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine=""
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+				CommandLine=""
+				ExcludedFromBuild="false"
+			/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)\lib\windows\$(ConfigurationName)\dll"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="10"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath=".\gpuqsort.cu"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="nvcc gpuqsort.cu -g -lib -o &quot;$(SolutionDir)\lib\windows\$(ConfigurationName)\static\gpuqsort.lib&quot;  -Xcompiler /MTd -clean&#x0D;&#x0A;nvcc gpuqsort.cu -g -lib -o &quot;$(SolutionDir)\lib\windows\$(ConfigurationName)\static\gpuqsort.lib&quot;  -Xcompiler /MTd  -I../inc&#x0D;&#x0A;nvcc gpuqsort.cu -g -shared -o &quot;$(SolutionDir)\lib\windows\$(ConfigurationName)\dll\gpuqsort.dll&quot;  -Xcompiler /MTd -I../inc&#x0D;&#x0A;"
+						AdditionalDependencies="gpuqsort_kernels.cu ../inc/gpuqsort.h"
+						Outputs="$(SolutionDir)\lib\windows\$(ConfigurationName)\static\gpuqsort.lib;$(SolutionDir)\lib\windows\$(ConfigurationName)\dll\gpuqsort.dll"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="nvcc gpuqsort.cu -O3 -lib -o &quot;$(SolutionDir)\lib\windows\$(ConfigurationName)\static\gpuqsort.lib&quot;  -Xcompiler /MT -clean&#x0D;&#x0A;nvcc gpuqsort.cu  -O3 -lib -o &quot;$(SolutionDir)\lib\windows\$(ConfigurationName)\static\gpuqsort.lib&quot;    -Xcompiler /MT -I../inc&#x0D;&#x0A;nvcc gpuqsort.cu -O3 -shared -o &quot;$(SolutionDir)\lib\windows\$(ConfigurationName)\dll\gpuqsort.dll&quot;  -Xcompiler /MT -I../inc&#x0D;&#x0A;"
+						AdditionalDependencies="gpuqsort_kernels.cu ../inc/gpuqsort.h"
+						Outputs="$(SolutionDir)\lib\windows\$(ConfigurationName)\static\gpuqsort.lib;$(SolutionDir)\lib\windows\$(ConfigurationName)\dll\gpuqsort.dll"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\gpuqsort_kernels.cu"
+				>
+			</File>
+			<File
+				RelativePath=".\simpletimer.cu"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
+			<File
+				RelativePath="..\inc\gpuqsort.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Resource Files"
+			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
