@@ -23,8 +23,12 @@ void terrain_synthesis(char* exemplar, char* output, int nw, int nh, int bsize, 
     res.mbaseheight=terrain.mbaseheight;
     res.mheightscale = terrain.mheightscale;
 
+    res.saveTerragen("tmpbef.ter");
+
     patch_synthesis(res, terrain,bsize, osize);
 
+    res.savePGM("tmptmp.pgm");
+    terrain.saveTerragen("tmpexem.ter");
     if (strstr (output,".ter") || strstr (output,".TER") )
     {
         res.saveTerragen(output);
@@ -75,13 +79,13 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
     //terr.reverse();
    Tree features;
     // features.shaunPPA(terr,false);
-    //features.renderFeatures(250.).savePGM("/tmp/ridges.pgm");
+    //features.renderFeatures(250.).savePGM("ridges.pgm");
     //return;
 
     features.runPPA(terr,true,7);
     //features.saveFile(name.c_str());
-    terr.savePGM("/tmp/ridges.pgm");
-    features.renderFeatures(1.).savePGM("/tmp/ridges_ppa.pgm",features.msource.getMax());
+    terr.savePGM("ridges.pgm");
+    features.renderFeatures(1.).savePGM("ridges_ppa.pgm",features.msource.getMax());
     return;*/
 
 
@@ -145,17 +149,17 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
         grad.second(a,20)=1;
     }
     poissonsolve(&res,grad);
-    res.savePGM("/tmp/res.pgm");
+    res.savePGM("res.pgm");
     cin.get();*/
 
     res.maxval=terrain.maxval;
     res.minval=terrain.minval;
 
-    terrain.savePGM("/tmp/dem.pgm",terrain.maxval);
-    sketch.savePGM("/tmp/user.pgm",terrain.maxval);
+    terrain.savePGM("dem.pgm",terrain.maxval);
+    sketch.savePGM("user.pgm",terrain.maxval);
 
-    terrain.saveTerragen("/tmp/dem.ter");
-    sketch.saveTerragen("/tmp/user.ter");
+    terrain.saveTerragen("dem.ter");
+    sketch.saveTerragen("user.ter");
 
     int up = max(7,(sketch.width()/100)+((sketch.width()/100)+1)%2);
     int dp = 7;//terrain.width()/75;
@@ -190,7 +194,7 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 usr_features.compute_control_pts(sphere);
                 if (usr_features.root.x==0 && usr_features.root.y==0)   break;
                 usr_features.getRoots(usr_roots);
-                usr_features.renderFeatures(1.).savePGM("/tmp/user_ridges_gpu.pgm");
+                usr_features.renderFeatures(1.).savePGM("user_ridges_gpu.pgm");
 
                 Tree dem_features;
                 string name = exemplar;
@@ -198,22 +202,22 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 name+="_ridges.txt";
                 if (fopen(name.c_str(),"r")){
                     dem_features.loadFile(terrain,name.c_str(),ridges=='r');
-                    //dem_features.renderFeatures(1.).savePGM("/tmp/dem_ridges_gpu_loaded.pgm",terrain.maxval);
+                    //dem_features.renderFeatures(1.).savePGM("dem_ridges_gpu_loaded.pgm",terrain.maxval);
                 }
                 else
                 {
                     dem_features.runPPA(terrain,ridges=='r',dp);
                     dem_features.saveFile(name.c_str());
-                    dem_features.renderFeatures(1.).savePGM("/tmp/dem_ridges_gpu.pgm",terrain.maxval);
+                    dem_features.renderFeatures(1.).savePGM("dem_ridges_gpu.pgm",terrain.maxval);
                 }
 
                 if (dem_features.getNodes().size()>0){
                     dem_features.compute_control_pts(sphere);
                     if (dem_features.root.x==0 && dem_features.root.y==0)   break;
                     dem_features.getRoots(dem_roots);
-                    dem_features.renderFeatures(1.).savePGM("/tmp/dem_ridges_gpu.pgm",terrain.maxval);
+                    dem_features.renderFeatures(1.).savePGM("dem_ridges_gpu.pgm",terrain.maxval);
                     match_Feature(res,usr_features,dem_features,tar_pyr,src_pyr,bsize);
-                    res.savePGM("/tmp/res_inter_gpu.pgm",terrain.maxval);
+                    res.savePGM("res_inter_gpu.pgm",terrain.maxval);
                  }
             }
 
@@ -229,7 +233,7 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 usr_features.compute_control_pts(sphere);
                 if (usr_features.root.x==0 && usr_features.root.y==0)   break;
                 usr_features.getRoots(usr_roots);
-                usr_features.renderFeatures(250.).savePGM("/tmp/user_valleys_gpu.pgm");
+                usr_features.renderFeatures(250.).savePGM("user_valleys_gpu.pgm");
 
                 Tree dem_features;
                 string name = exemplar;
@@ -237,22 +241,22 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 name+="_valleys.txt";
                 if (fopen(name.c_str(),"r")){
                     dem_features.loadFile(terrain,name.c_str(),ridges=='r');
-                    //dem_features.renderFeatures(250.).savePGM("/tmp/dem_valleys_loaded.pgm",terrain.maxval);
+                    //dem_features.renderFeatures(250.).savePGM("dem_valleys_loaded.pgm",terrain.maxval);
                 }
                 else
                 {
                     dem_features.runPPA(terrain,ridges=='r',dp);
                     dem_features.saveFile(name.c_str());
-                    dem_features.renderFeatures(250.).savePGM("/tmp/dem_valleys_gpu.pgm",terrain.maxval);
+                    dem_features.renderFeatures(250.).savePGM("dem_valleys_gpu.pgm",terrain.maxval);
                 }
 
                 if (dem_features.getNodes().size()>0){
                     dem_features.compute_control_pts(sphere);
                     if (dem_features.root.x==0 && dem_features.root.y==0)   break;
                     dem_features.getRoots(dem_roots);
-                    dem_features.renderFeatures(250.).savePGM("/tmp/dem_valleys_gpu.pgm",terrain.maxval);
+                    dem_features.renderFeatures(250.).savePGM("dem_valleys_gpu.pgm",terrain.maxval);
                     match_Feature(res,usr_features,dem_features,tar_pyr,src_pyr,bsize);
-                    res.savePGM("/tmp/res_inter_gpu.pgm",terrain.maxval);
+                    res.savePGM("res_inter_gpu.pgm",terrain.maxval);
                 }
             }
         }
@@ -269,7 +273,7 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 usr_features.compute_control_pts(sphere);
                 if (usr_features.root.x==0 && usr_features.root.y==0)   break;
                 usr_features.getRoots(usr_roots);
-                usr_features.renderFeatures(1.).savePGM("/tmp/user_ridges_gpu.pgm");
+                usr_features.renderFeatures(1.).savePGM("user_ridges_gpu.pgm");
 
                 Tree dem_features;
                 string name = exemplar;
@@ -277,22 +281,22 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 name+="_ridges.txt";
                 if (fopen(name.c_str(),"r")){
                     dem_features.loadFile(terrain,name.c_str(),ridges=='r');
-                    //dem_features.renderFeatures(1.).savePGM("/tmp/dem_ridges_gpu_loaded.pgm",terrain.maxval);
+                    //dem_features.renderFeatures(1.).savePGM("dem_ridges_gpu_loaded.pgm",terrain.maxval);
                 }
                 else
                 {
                     dem_features.runPPA(terrain,ridges=='r',dp);
                     dem_features.saveFile(name.c_str());
-                    //dem_features.renderFeatures(1.).savePGM("/tmp/dem_ridges_gpu.pgm",terrain.maxval);
+                    //dem_features.renderFeatures(1.).savePGM("dem_ridges_gpu.pgm",terrain.maxval);
                 }
 
                 if (dem_features.getNodes().size()>0){
                     dem_features.compute_control_pts(sphere);
                     dem_features.getRoots(dem_roots);
                     if (dem_features.root.x==0 && dem_features.root.y==0)   break;
-                    dem_features.renderFeatures(1.).savePGM("/tmp/dem_ridges_gpu.pgm",terrain.maxval);
+                    dem_features.renderFeatures(1.).savePGM("dem_ridges_gpu.pgm",terrain.maxval);
                     match_Feature(res,usr_features,dem_features,tar_pyr,src_pyr,bsize);
-                    res.savePGM("/tmp/res_inter_gpu.pgm",terrain.maxval);
+                    res.savePGM("res_inter_gpu.pgm",terrain.maxval);
                  }
             }
 
@@ -306,7 +310,7 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 usr_features.compute_control_pts(sphere);
                 if (usr_features.root.x==0 && usr_features.root.y==0)   break;
                 usr_features.getRoots(usr_roots);
-                usr_features.renderFeatures(250.).savePGM("/tmp/user_valleys_gpu.pgm");
+                usr_features.renderFeatures(250.).savePGM("user_valleys_gpu.pgm");
 
                 Tree dem_features;
                 string name = exemplar;
@@ -314,22 +318,22 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
                 name+="_valleys.txt";
                 if (fopen(name.c_str(),"r")){
                     dem_features.loadFile(terrain,name.c_str(),ridges=='r');
-                    //dem_features.renderFeatures(250.).savePGM("/tmp/dem_valleys_loaded.pgm",terrain.maxval);
+                    //dem_features.renderFeatures(250.).savePGM("dem_valleys_loaded.pgm",terrain.maxval);
                 }
                 else
                 {
                     dem_features.runPPA(terrain,ridges=='r',dp);
                     dem_features.saveFile(name.c_str());
-                    //dem_features.renderFeatures(250.).savePGM("/tmp/dem_valleys_gpu.pgm",terrain.maxval);
+                    //dem_features.renderFeatures(250.).savePGM("dem_valleys_gpu.pgm",terrain.maxval);
                 }
 
                 if (dem_features.getNodes().size()>0){
                     dem_features.compute_control_pts(sphere);
                     if (dem_features.root.x==0 && dem_features.root.y==0)   break;
                     dem_features.getRoots(dem_roots);
-                    dem_features.renderFeatures(250.).savePGM("/tmp/dem_valleys_gpu.pgm",terrain.maxval);
+                    dem_features.renderFeatures(250.).savePGM("dem_valleys_gpu.pgm",terrain.maxval);
                     match_Feature(res,usr_features,dem_features,tar_pyr,src_pyr,bsize);
-                    res.savePGM("/tmp/res_inter_gpu.pgm",terrain.maxval);
+                    res.savePGM("res_inter_gpu.pgm",terrain.maxval);
 
                 }
             }
@@ -340,18 +344,18 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
         break;
     }
 
-    res.saveTerragen("/tmp/res_inter_gpu.ter");
+    res.saveTerragen("res_inter_gpu.ter");
 
     //return;
 
-    //bigtex.savePGM("/tmp/big1.pgm",res.maxval);
+    //bigtex.savePGM("big1.pgm",res.maxval);
     Image tmp = res;
     for (int id=0; id<res.width()*res.height(); id++){
     	if (tmp.getPixels()[id]<=BG){
     		tmp.getPixels()[id] = 250;
     	}
     }
-    tmp.savePGM("/tmp/res_inter2_gpu.pgm");
+    tmp.savePGM("res_inter2_gpu.pgm");
 
     node_list dem_nodes;
     //bsize+=10;
@@ -366,10 +370,10 @@ void terrain_synthesis_run(char* exemplar, char* sketchf, char* output, char rid
         }
     match_noFeature(res,terrain,sketch,dem_nodes,tar_pyr,src_pyr,bsize*1,osize);
 
-    res.savePGM("/tmp/res_tmp_gpu.pgm");
-    res.saveTerragen("/tmp/res_tmp_gpu.ter");
+    res.savePGM("res_tmp_gpu.pgm");
+    res.saveTerragen("res_tmp_gpu.ter");
 
-    //bigtex.savePGM("/tmp/big2.pgm",res.maxval);
+    //bigtex.savePGM("big2.pgm",res.maxval);
 
     if (strstr (output,".ter") || strstr (output,".TER") )
     {

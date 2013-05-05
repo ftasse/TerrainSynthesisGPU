@@ -1139,12 +1139,12 @@ void match_Feature_gpu1(Terrain& dest, Tree& usr_features, Tree& dem_features, v
         cand_time += elapsed;
     }
 
-    //big.savePGM("/tmp/bigtmp_Feature.pgm");
+    //big.savePGM("bigtmp_Feature.pgm");
     //cudaMemcpy(src_ptr, src_dev, sizeof(float)*src.width()*src.height(), cudaMemcpyDeviceToHost);
     //Image cand(bsize, bsize);
     //getCand(cand, bigtex, ncand, 4*bsize*bsize);
 
-    //cand.savePGM("/tmp/cand.pgm");
+    //cand.savePGM("cand.pgm");
 
 
     node_list usr_nodes = usr_features.processNodes;
@@ -1200,7 +1200,7 @@ void match_Feature_gpu1(Terrain& dest, Tree& usr_features, Tree& dem_features, v
         e_tmp = clock();
         paste_time+=mstimer(s_tmp,e_tmp);
 
-        //dest.savePGM("/tmp/tmp.pgm");         cin.get();
+        //dest.savePGM("tmp.pgm");         cin.get();
 
     }
 

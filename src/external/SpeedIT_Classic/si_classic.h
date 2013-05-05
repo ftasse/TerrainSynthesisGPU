@@ -26,7 +26,7 @@
     //#error You should not compile this file as a part of dll library!
     #define DLLAPI __declspec(dllexport)
   #else
-    #define DLLAPI __declspec(dllimport)
+    #define DLLAPI //__declspec(dllimport)
   #endif
 
 #else

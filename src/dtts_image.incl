@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <algorithm>
+#include <inttypes.h>
 using namespace std;
 
 // Test if a node is in a list
@@ -81,18 +82,9 @@ Dtts::Image::Image(int pwidth, int pheight)
     }
 }
 
-Dtts::Terrain::Terrain(int pwidth, int pheight)
+Dtts::Terrain::Terrain(int pwidth, int pheight):Dtts::Image(pwidth, pheight)
 {
-    // Allocate memory for this image
 
-    mwidth = pwidth;
-    mheight=pheight;
-    mpixels = new float [mwidth*mheight];
-    for (int i=0; i<mwidth; i++)
-    {
-        for (int j=0; j<mheight; j++)
-            mpixels[i+j*mwidth]=0;
-    }
 }
 
 
@@ -378,13 +370,6 @@ Dtts::Image::Image(const Image& oldImage)
         for(int j = 0; j < mheight; j++)
             mpixels[i+j*mwidth] = oldImage.mpixels[i+j*mwidth];
     }
-}
-
-void swap(int& a, int& b)
-{
-    int tmp = b;
-    b = a;
-    a = tmp;
 }
 
 vector<node_t> get_rotate_pts(vector<node_t> nodes, node_t ctr, int theta)
@@ -1109,10 +1094,10 @@ bool Dtts::Terrain::loadTerragen(const char* fname)
     {
         tmpstr = (char *) &inbuffer[pos];
         frombuffer = string((char *) tmpstr, 4);
-        if(frombuffer.compare("SIZE") == 0) // num data points on shortest side - 1
+        if(frombuffer.compare("SIZE") == 0) // num data points on int16_test side - 1
         {
             pos += 4;
-            tersize = (int) (* ((short *) &inbuffer[pos]));
+            tersize = (int) (* ((int16_t *) &inbuffer[pos]));
             w = tersize+1;
             h = tersize+1;  // defaults assuming no XPTS, YPTS
             pos += 4;
@@ -1120,14 +1105,14 @@ bool Dtts::Terrain::loadTerragen(const char* fname)
         if(frombuffer.compare("XPTS") == 0) // num data points in x dimension
         {
             pos += 4;
-            w = (int) (* ((short *) &inbuffer[pos]));
+            w = (int) (* ((int16_t *) &inbuffer[pos]));
             pos += 4;
             cout << "XPTS = " << w << "found\n";
         }
         if(frombuffer.compare("YPTS") == 0) // num data points in y dimension
         {
             pos += 4;
-            h = (int) (* ((short *) &inbuffer[pos]));
+            h = (int) (* ((int16_t *) &inbuffer[pos]));
             pos += 4;
             cout<<"YPTS = " << h << "found\n";
         }
@@ -1144,9 +1129,9 @@ bool Dtts::Terrain::loadTerragen(const char* fname)
         if(frombuffer.compare("ALTW") == 0) // marks the beginning of the altitude data
         {
             pos += 4;
-            mheightscale = (int) (* ((short *) &inbuffer[pos]));
+            mheightscale = (int) (* ((int16_t *) &inbuffer[pos]));
             pos += 2;
-            mbaseheight = (int) (* ((short *) &inbuffer[pos]));
+            mbaseheight = (int) (* ((int16_t *) &inbuffer[pos]));
             pos += 2;
             alts = true; // finish processing header block
         }
@@ -1203,7 +1188,7 @@ bool Dtts::Terrain::loadTerragen(const char* fname)
         for(int i = 0; i < getWidth(); i++)
         {
             //printf("elevation: %d\n",c);
-            float alt = mbaseheight+((* ((short *) &inbuffer[pos]))*mheightscale/65536.0);
+            float alt = mbaseheight+((* ((int16_t *) &inbuffer[pos]))*mheightscale/65536.0);
             //cout<<alt<<" ";
             if (alt>maxval){
                  maxval = alt;
@@ -1223,6 +1208,7 @@ bool Dtts::Terrain::loadTerragen(const char* fname)
    minval -=0.001;
    maxval-=minval;
 
+   if (fabs(maxval) > 1e-8)
     for(int j = 0; j < getHeight(); j++)
         for(int i = 0; i < getWidth(); i++)
         {
@@ -1247,7 +1233,7 @@ bool Dtts::Terrain::saveTerragen(const char* fname)
     ofstream outfile;
     int i, j;
     float hght, hrange, hbase;
-    short val, pad = 0;
+    int16_t val, pad = 0;
 
     float minih = 100000, maxih=0;
 
@@ -1263,6 +1249,7 @@ bool Dtts::Terrain::saveTerragen(const char* fname)
                 maxih = ((getPixel(i,j)-1)*maxval/255)+minval;
             }
         }
+
 
 
     hrange = maxih - minih;			// in terrain coordinates
@@ -1282,7 +1269,7 @@ bool Dtts::Terrain::saveTerragen(const char* fname)
 
         outfile.write("SIZE", 4); // dimensions
 
-        val = (short) mwidth-1;
+        val = (int16_t) mwidth-1;
         outfile.write((char *) &val, 2);
         outfile.write((char *) &pad, 2);  // padding
 
@@ -1298,9 +1285,9 @@ bool Dtts::Terrain::saveTerragen(const char* fname)
         //baseheight = (hbase * ((float) dimx));
 
         outfile.write("ALTW", 4); // altitude header
-        val = (short) (mheightscale-1);
+        val = (int16_t) (mheightscale-1);
         outfile.write((char *) &val, 2); // terrain height
-        val = (short) mbaseheight;
+        val = (int16_t) mbaseheight;
         outfile.write((char *) &val, 2); // terrain base
 
         for(j = 0; j < getHeight(); j++)
@@ -1309,7 +1296,7 @@ bool Dtts::Terrain::saveTerragen(const char* fname)
                 // conversion to metres is: height = terbase + h * terheight / 65536
                 hght = ((getPixel(i, (getHeight()-1)-j))*(maxval)/255)+minval; // height in grid cell units
                 hght = ((hght - mbaseheight) * 65536.0) / mheightscale;
-                val = (short) hght;
+                val = (int16_t) hght;
                 outfile.write((char *) &val, 2);
             }
 
@@ -1336,7 +1323,7 @@ void Dtts::Image::convertTerragen(const char* fname)
     int i, j;
     float terscale=30., hght;
     int terheight=100, baseheight=100;
-    short val, pad = 0;
+    int16_t val, pad = 0;
 
 
     outfile.open(fname, ios_base::out | ios_base::binary);
@@ -1347,7 +1334,7 @@ void Dtts::Image::convertTerragen(const char* fname)
 
         outfile.write("SIZE", 4); // dimensions
 
-        val = (short) mwidth-1;
+        val = (int16_t) mwidth-1;
         outfile.write((char *) &val, 2);
         outfile.write((char *) &pad, 2);  // padding
 
@@ -1363,9 +1350,9 @@ void Dtts::Image::convertTerragen(const char* fname)
         //baseheight = (hbase * ((float) dimx));
 
         outfile.write("ALTW", 4); // altitude header
-        val = (short) (terheight);
+        val = (int16_t) (terheight);
         outfile.write((char *) &val, 2); // terrain height
-        val = (short) baseheight;
+        val = (int16_t) baseheight;
         outfile.write((char *) &val, 2); // terrain base
 
         for(j = 0; j < getHeight(); j++)
@@ -1374,7 +1361,7 @@ void Dtts::Image::convertTerragen(const char* fname)
                 // conversion to metres is: height = terbase + h * terheight / 65536
                 hght = (getPixel(i, j)); // height in grid cell units
                 hght = ((hght - baseheight) * 65535.0f) / terheight;
-                val = (short) hght;
+                val = (int16_t) hght;
                 outfile.write((char *) &val, 2);
             }
 
@@ -1392,7 +1379,6 @@ void Dtts::Image::convertTerragen(const char* fname)
         cout<<"Error: unable to open file";
     }
 }
-
 
 Dtts::Image Dtts::Terrain::getImage()
 {
@@ -1527,3 +1513,36 @@ Dtts::Image sobelEdge(Dtts::Image img)
     return res;
 }
 
+void normalizeImage( Dtts::Image& image )
+{
+    float * h_data = image.getPixels();
+    int w = image.width();
+    int h = image.height();
+
+    float min, max;
+    float height;
+    int i;
+
+    min = h_data[0];
+    max = h_data[0];
+
+    //find the min/max values of the height temp_buffer
+    for( i=1; i<w*h; i++ )
+    {
+        if( h_data[i]>max )
+            max= h_data[i];
+
+        else if( h_data[i]<min )
+            min= h_data[i];
+    }
+
+    //find the range of the altitude
+    if( max <= min )
+        return;
+
+    height= max-min;
+
+    //scale the values to a range of 0-255 (because I like things that way)
+    for( i=0; i<w*h; i++ )
+        h_data[i]= ( ( h_data[i]-min )/height )*255.0f;
+}

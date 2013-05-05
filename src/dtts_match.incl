@@ -33,17 +33,6 @@ void print_times()
     cerr<<" Patch merging: "<<paste_time/1000.0<<"s\n";
 }
 
-#if defined (__CUDACC__)
-__host__ __device__ 
-#endif
-inline void swap(int & a, int & b)
-{
-    // Alternative swap doesn't use a temporary register:
-    a ^= b;
-    b ^= a;
-    a ^= b;
-}
-
 Wavelet wave(Daub8Coeffs,8,0);
 
 #if defined (__CUDACC__)
@@ -1025,7 +1014,7 @@ Image findCand(Image& dest, float* bigtex, int ncand, vector<cost_t> candidates,
         {
             Image cand(bsize,bsize);
             getCand(cand,bigtex,ncand,candidates[k].tnode.x);
-            //cand.savePGM("/tmp/cand.pgm");
+            //cand.savePGM("cand.pgm");
             float cost = graphCut_cost(&dest,&cand,dx,dy);
             if (cost<mini)
             {
@@ -1680,8 +1669,10 @@ void patch_synthesis(Terrain& dest, Terrain& src,int bsize, int osize)
 
             patch_merging(&dest, &patch, dx, dy,1,bsize/10.);
 
-            dest.savePGM("/tmp/res_tmp_cpu.pgm");
-            dest.saveTerragen("/tmp/res_tmp_cpu.ter");
+#ifdef _DEBUG
+            dest.savePGM("res_tmp_cpu.pgm");
+            dest.saveTerragen("res_tmp_cpu.ter");
+#endif
         }
 
     end_t = clock();

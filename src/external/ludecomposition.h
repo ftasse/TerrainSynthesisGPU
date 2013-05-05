@@ -42,7 +42,7 @@ template <typename T> int LU_Solve(
 
   int m = a.size1(), n = a.size2();
   int pivsign = 0;
-  int* piv = (int*)alloca( sizeof(int) * m);
+  int* piv = (int*)malloc( sizeof(int) * m); //alloca
 
   // PART 1: DECOMPOSITION
   //

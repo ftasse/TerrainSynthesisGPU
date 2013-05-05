@@ -2,8 +2,9 @@
 import QtQuick 1.1
 
 Rectangle {
-    width: 360
-    height: 360
+    id: root_view
+    width: 900
+    height: 600
     Text {
         anchors.centerIn: parent
         text: "Hello World"

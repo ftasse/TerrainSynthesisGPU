@@ -2,6 +2,10 @@
 #include "dtts_merging.h"
 #include<sys/time.h>
 
+#ifndef uint
+#define uint unsigned int
+#endif
+
 void cgrad_seq (int N, int nnz, float* vals, int* colind, int* rowptr, float* X, float* B, int* niter, float* epsilon){
 
  sicl_gscsrcg_seq( N, vals, colind, rowptr, X, B,P_NONE,niter,epsilon);
@@ -382,7 +386,7 @@ Image* graphCut(Image* dest, Image* patch, int dx, int dy, bool gradient, bool s
                 (*mask)(x,y) = vSINK;
         }*/
     delete tmp;
-    //mask->savePGM("/tmp/mask.pgm");
+    //mask->savePGM("mask.pgm");
     return mask;
 }
 
@@ -659,7 +663,7 @@ void poissonsolve(Image* dest, Gradient& grad, float boundary)
     int dx=0; int dy=0;
 
     Image div = get_divergent(grad);
-    div.savePGM("/tmp/res_div.pgm",10);
+    div.savePGM("res_div.pgm",10);
 
     for (int y=0; y<h; y++)
             for (int x=0; x<w; x++)
@@ -734,7 +738,7 @@ void poisson(Image* dest, Image* patch, int dx, int dy, int nlevel, float drange
 {
 
     Image* mask = graphCut(dest,patch,dx,dy,false);    //Tested and severe=false performs the best
-    mask->savePGM("/tmp/mask.pgm");
+    mask->savePGM("mask.pgm");
     int w = patch->width();
     int h = patch->height();
     int *pos = new int [w*h];
@@ -777,8 +781,8 @@ void poisson(Image* dest, Image* patch, int dx, int dy, int nlevel, float drange
                 if (h2>BG) (grad.second)(x,y)= h - h2;
             }
 
-        ///grad.first.savePGM("/tmp/patchgradx.pgm",10);
-        ///grad.second.savePGM("/tmp/patchgrady.pgm",10);
+        ///grad.first.savePGM("patchgradx.pgm",10);
+        ///grad.second.savePGM("patchgrady.pgm",10);
 
         for (int y=0; y<h; y++)
             for (int x=0; x<w; x++)
@@ -787,19 +791,19 @@ void poisson(Image* dest, Image* patch, int dx, int dy, int nlevel, float drange
                     grad.first(x,y) = 0;
                     grad.second(x,y) = 0;
                 }
-        ///grad.first.savePGM("/tmp/patchgradxx.pgm",10);
-        ///grad.second.savePGM("/tmp/patchgradyy.pgm",10);
+        ///grad.first.savePGM("patchgradxx.pgm",10);
+        ///grad.second.savePGM("patchgradyy.pgm",10);
 
 
         /*for (int y=0; y<h; y++)
              for (int x=0; x<w; x++)
                  if ( (*mask)(x,y) >= vsSINK )
                      (*patch)(x,y)=(*dest)(x+dx,y+dy);
-         patch->savePGM("/tmp/patchbef.pgm",dest->maxval);*/
+         patch->savePGM("patchbef.pgm",dest->maxval);*/
 
         Image div = get_divergent(grad);
 
-        div.savePGM("/tmp/patchdiv.pgm",10);
+        div.savePGM("patchdiv.pgm",10);
         poissonsolve(dest,patch,div, pos,N, dx,dy);
     }
     //else    cout << "Solver::solve: No masked pixels found (mask color is non-grey)\n";
@@ -878,12 +882,12 @@ void shepard(Image* dest, Image* patch, int dx, int dy, int nlevel, float drange
 {
     Image* mask = graphCut(dest,patch,dx,dy);    //Tested and severe=false performs the best
 
-    //mask->savePGM("/tmp/mask.pgm");
+    //mask->savePGM("mask.pgm");
 
     vector<node_t> seam;
     vector<float>   target_val;
 
-    //patch->savePGM("/tmp/patchdev.pgm",dest->maxval);
+    //patch->savePGM("patchdev.pgm",dest->maxval);
     for (int i=0; i<patch->width(); i++)
         for (int j=0; j<patch->height(); j++)
         {
@@ -897,9 +901,9 @@ void shepard(Image* dest, Image* patch, int dx, int dy, int nlevel, float drange
         }
 
 
-    //patch->savePGM("/tmp/patchdev2.pgm",dest->maxval);
+    //patch->savePGM("patchdev2.pgm",dest->maxval);
     sinterpolate(*patch,*mask,seam,target_val,drange);
-    //patch->savePGM("/tmp/patch.pgm",dest->maxval);
+    //patch->savePGM("patch.pgm",dest->maxval);
 
     for (int i=0; i<patch->width(); i++)
         for (int j=0; j<patch->height(); j++)
@@ -1092,13 +1096,13 @@ void wiredef(Image* dest, Image* patch, int dx, int dy, int nlevel, float doff)
                     }
 
                 Terrain nter;
-                nter.loadTerragen("/tmp/res_tmp.ter");
+                nter.loadTerragen("res_tmp.ter");
                 for (int x=0; x<nsrc.width(); x++) for (int y=0; y<nsrc.height(); y++)
                         if ( x+dx-drange>=0 &&  x+dx-drange<dest->width() && y+dy-drange>=0 &&  y+dy-drange<dest->height() && (*dest)(x+dx-drange,y+dy-drange)!=0.)
                         {
                             nter(x+dx-drange,y+dy-drange)=ntmp(x,y);
                         }
-                nter.saveTerragen("/tmp/wire_tmp.ter");
+                nter.saveTerragen("wire_tmp.ter");
                 cin.get();
             }
 
@@ -1176,7 +1180,7 @@ void patch_merging_cpu(Image* dest_f, Image* patch_f, int dx, int dy, int nlevel
     int w = (*patch_f).width(), h = patch_f->height();
 
     Image* mask = graphCut(dest_f,patch_f,dx,dy);    //Tested and severe=false performs the best
-    //mask->savePGM("/tmp/mask.pgm");
+    //mask->savePGM("mask.pgm");
 
     Gradient pdest_g(Image(w,h),Image(w,h));
     Gradient patch_g = get_gradient(*patch_f);
@@ -1216,15 +1220,15 @@ void patch_merging_cpu(Image* dest_f, Image* patch_f, int dx, int dy, int nlevel
 
         }
 
-    //patch_g.first.savePGM("/tmp/patch_gx_baf.pgm",20);    patch_g.second.savePGM("/tmp/patch_gy_baf.pgm",20);
-    //pdest_g.first.savePGM("/tmp/patch_gx_bcf.pgm",20);    pdest_g.second.savePGM("/tmp/patch_gy_bcf.pgm",20);
+    //patch_g.first.savePGM("patch_gx_baf.pgm",20);    patch_g.second.savePGM("patch_gy_baf.pgm",20);
+    //pdest_g.first.savePGM("patch_gx_bcf.pgm",20);    pdest_g.second.savePGM("patch_gy_bcf.pgm",20);
 
     if (seam.size()>0)
     {
 
 	{
 		int bsize = mask->width();
-		//patch_g.first.savePGM("/tmp/patch_gx_bef.pgm",20);    patch_g.second.savePGM("/tmp/patch_gy_bef.pgm",20);
+        //patch_g.first.savePGM("patch_gx_bef.pgm",20);    patch_g.second.savePGM("patch_gy_bef.pgm",20);
 		// Shepard Interpolation
 		point_t*  points = new point_t[bsize*bsize];
 		for (int j=0; j<patch_f->height(); j++)
@@ -1251,12 +1255,12 @@ void patch_merging_cpu(Image* dest_f, Image* patch_f, int dx, int dy, int nlevel
 		delete [] points;
 	}
 
-        //patch_g.first.savePGM("/tmp/patch_gx_bef.pgm",20);    patch_g.second.savePGM("/tmp/patch_gy_bef.pgm",20);
+        //patch_g.first.savePGM("patch_gx_bef.pgm",20);    patch_g.second.savePGM("patch_gy_bef.pgm",20);
         //sinterpolate_g(patch_g,*mask,seam,xdiff,ydiff,drange);
-        //patch_g.first.savePGM("/tmp/patch_gx.pgm",20);    patch_g.second.savePGM("/tmp/patch_gy.pgm",20);
+        //patch_g.first.savePGM("patch_gx.pgm",20);    patch_g.second.savePGM("patch_gy.pgm",20);
 
         Image div= get_divergent(patch_g);
-        //div.savePGM("/tmp/patch_div.pgm",15);
+        //div.savePGM("patch_div.pgm",15);
 
         int *pos = new int [w*h];
         uint N = 0;
@@ -1268,9 +1272,9 @@ void patch_merging_cpu(Image* dest_f, Image* patch_f, int dx, int dy, int nlevel
                 N++;
             }
         //cin.get();
-        //patch_f->savePGM("/tmp/res_cand1.pgm",dest_f->maxval);
+        //patch_f->savePGM("res_cand1.pgm",dest_f->maxval);
         poissonsolve_cpu(dest_f,patch_f,div,pos,N,dx,dy);
-        //patch_f->savePGM("/tmp/res_cand2.pgm",dest_f->maxval);
+        //patch_f->savePGM("res_cand2.pgm",dest_f->maxval);
         //cin.get();
         delete [] pos;
 

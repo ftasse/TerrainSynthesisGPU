@@ -50,7 +50,7 @@ void match_Feature_cpu1(Terrain& dest, Tree& usr_features, Tree& dem_features, v
         cand_time += elapsed;
     }
 
-    //big.savePGM("/tmp/bigtmp_Feature.pgm");
+    //big.savePGM("bigtmp_Feature.pgm");
     delete [] dem_lsizes;
 
     node_list usr_nodes = usr_features.processNodes;
@@ -156,7 +156,7 @@ void match_Feature_cpu2(Terrain& dest, Tree& usr_features, Tree& dem_features, v
         cand_time += elapsed;
     }
 
-    //big.savePGM("/tmp/bigtmp_Feature.pgm");
+    //big.savePGM("bigtmp_Feature.pgm");
     delete [] dem_lsizes;
 
     node_list usr_nodes = usr_features.processNodes;

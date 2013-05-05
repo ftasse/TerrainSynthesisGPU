@@ -105,7 +105,8 @@ namespace Dtts {
          *@param fname path of the PGM image
          */
         void savePGM(const char* fname, size_t threshold=MAX_VAL);
-	void convertTerragen(const char* fname);
+
+        void convertTerragen(const char* fname);
 
         /**
          * Set the width of the image
@@ -386,6 +387,17 @@ float   compare_overlap(Dtts::Image& img1, Dtts::Image&img2, int x, int y );
 
 vector<point_t> points_on_line(point_t p, point_t q, int nsteps);
 
+#if defined (__CUDACC__)
+__host__ __device__
+#endif
+inline void swap(int & a, int & b)
+{
+    // Alternative swap doesn't use a temporary register:
+    a ^= b;
+    b ^= a;
+    a ^= b;
+}
 
+void normalizeImage(Dtts::Image &image );
 
 #endif
