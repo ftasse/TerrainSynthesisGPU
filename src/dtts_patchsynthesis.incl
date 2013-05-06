@@ -23,12 +23,8 @@ void terrain_synthesis(char* exemplar, char* output, int nw, int nh, int bsize, 
     res.mbaseheight=terrain.mbaseheight;
     res.mheightscale = terrain.mheightscale;
 
-    res.saveTerragen("tmpbef.ter");
-
     patch_synthesis(res, terrain,bsize, osize);
 
-    res.savePGM("tmptmp.pgm");
-    terrain.saveTerragen("tmpexem.ter");
     if (strstr (output,".ter") || strstr (output,".TER") )
     {
         res.saveTerragen(output);

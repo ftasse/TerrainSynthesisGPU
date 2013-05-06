@@ -619,11 +619,11 @@ void match_noFeature_cpu2(Terrain& dest, Image& src, Image& target, node_list de
 
 void match_noFeature(Terrain& dest, Image& src, Image& target, node_list dem_nodes, vector<Image>& tar_pyr, vector<Image>&  src_pyr, int bsize, int osize)
 {
-    match_noFeature_cpu2(dest, src, target, dem_nodes, tar_pyr, src_pyr, bsize, osize);
+    match_noFeature_cpu1(dest, src, target, dem_nodes, tar_pyr, src_pyr, bsize, osize);
 }
 
 void match_Feature(Terrain& dest, Tree& usr_features, Tree& dem_features, vector<Image>& tar_pyr, vector<Image>&  src_pyr, int bsize)
 {
-    match_Feature_cpu2(dest, usr_features, dem_features, tar_pyr, src_pyr, bsize);
+    match_Feature_cpu1(dest, usr_features, dem_features, tar_pyr, src_pyr, bsize);
 }
 

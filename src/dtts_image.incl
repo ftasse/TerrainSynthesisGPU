@@ -1230,6 +1230,9 @@ bool Dtts::Terrain::loadTerragen(const char* fname)
 
 bool Dtts::Terrain::saveTerragen(const char* fname)
 {
+    minval = getMin();
+    maxval = getMax();
+
     ofstream outfile;
     int i, j;
     float hght, hrange, hbase;
